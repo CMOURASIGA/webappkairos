@@ -1,0 +1,350 @@
+# KAIROS AGENT
+
+## ADR-001 - Delimitação de Escopo do MVP v1.0 (Projetos e Especialistas)
+
+**Documento:** Architecture Decision Record (ADR)
+**Número:** ADR-001
+**Data:** 04/07/2026
+**Responsável:** Christian Moura
+**Status:** Aprovado
+
+---
+
+# Objetivo
+
+Definir claramente quais módulos fazem parte do escopo funcional do MVP v1.0 do KAIROS AGENT e quais módulos permanecerão apenas como estrutura arquitetural para evolução futura.
+
+Este documento visa evitar expansão indevida do escopo (scope creep) durante o desenvolvimento inicial.
+
+---
+
+# Contexto
+
+Durante a definição da arquitetura do KAIROS AGENT foram identificados dois módulos estratégicos:
+
+```text id="k7m8p2"
+PROJETOS
+ESPECIALISTAS
+```
+
+Embora ambos apareçam na navegação, arquitetura e identidade visual do sistema, estes módulos ainda não possuem requisitos funcionais completos definidos para implementação integral.
+
+A implementação prematura destes módulos aumentaria significativamente:
+
+* complexidade;
+* tempo de desenvolvimento;
+* custo operacional;
+* risco técnico;
+* acoplamento entre componentes.
+
+---
+
+# Decisão Arquitetural
+
+Para o MVP v1.0, os módulos:
+
+```text id="p4n7s1"
+PROJETOS
+ESPECIALISTAS
+```
+
+serão implementados apenas como estrutura base, sem sua lógica operacional completa.
+
+---
+
+# Escopo Oficial do MVP v1.0
+
+Os módulos abaixo compõem o núcleo funcional obrigatório do MVP:
+
+```text id="c9r2v6"
+✓ Autenticação
+✓ Dashboard
+✓ Chat
+✓ Motor do Agente
+✓ Memórias
+✓ Orientações
+✓ Documentos
+✓ Busca Vetorial
+✓ RAG
+✓ Histórico
+✓ Painel Contextual
+✓ Configurações
+✓ Conversação Realtime
+✓ PWA
+✓ Logs
+```
+
+---
+
+# Módulo Projetos
+
+## Objetivo Futuro
+
+O módulo Projetos será responsável por armazenar:
+
+```text id="w8g3d5"
+Projetos
+Clientes
+Cronogramas
+Riscos
+Decisões
+Documentos
+Stakeholders
+Dependências
+Histórico
+Métricas
+```
+
+---
+
+## Escopo Permitido no MVP
+
+Implementar apenas:
+
+### Backend
+
+```text id="m2j6h4"
+Tabela projects
+CRUD básico
+Relacionamento com usuário
+Status
+```
+
+---
+
+### Frontend
+
+```text id="j5n8k1"
+Tela
+Listagem
+Criação
+Edição
+Exclusão
+Visualização
+```
+
+---
+
+### Campos mínimos
+
+```text id="b4p9q3"
+Nome
+Cliente
+Descrição
+Status
+Data criação
+Data atualização
+```
+
+---
+
+## Não Implementar no MVP
+
+```text id="f7r2m6"
+Cronograma
+Kanban
+Gantt
+Dependências
+Riscos
+IA especializada
+Custos
+Financeiro
+Métricas
+Dashboards
+Automações
+Timeline
+```
+
+---
+
+# Módulo Especialistas
+
+## Objetivo Futuro
+
+Permitir múltiplos agentes especialistas.
+
+Exemplo:
+
+```text id="t3k8n5"
+KAIROS MASTER
+    │
+    ├── PM AGENT
+    ├── TECH AGENT
+    ├── BUSINESS AGENT
+    ├── FINANCE AGENT
+    ├── PERSONAL AGENT
+    └── EAC AGENT
+```
+
+---
+
+## Escopo Permitido no MVP
+
+Implementar apenas:
+
+### Backend
+
+```text id="r6m4c2"
+Tabela agents
+CRUD
+Configuração
+Ativação
+Desativação
+```
+
+---
+
+### Frontend
+
+```text id="x9f1q7"
+Tela especialistas
+Listagem
+Status
+Configuração
+```
+
+---
+
+### Campos mínimos
+
+```text id="e5j2p8"
+Nome
+Descrição
+Prompt base
+Modelo
+Ativo
+```
+
+---
+
+## Não Implementar no MVP
+
+```text id="u1g6r4"
+Orquestração
+Delegação
+Memória própria
+RAG próprio
+Ferramentas próprias
+Prompt chaining
+Agent routing
+Multiagent framework
+Execução paralela
+```
+
+---
+
+# Regra de Desenvolvimento
+
+Durante o desenvolvimento do MVP:
+
+## Permitido
+
+```text id="q4n8b7"
+Criar tabelas
+Criar APIs
+Criar telas
+Criar navegação
+Criar configurações
+Criar persistência
+```
+
+---
+
+## Proibido
+
+```text id="a2v5d9"
+Expandir lógica
+Criar automações
+Criar IA própria
+Criar orquestração
+Criar workflows
+Criar especialistas reais
+Criar gestão completa de projetos
+```
+
+---
+
+# Roadmap Futuro
+
+## Fase 2
+
+### Projetos
+
+```text id="g7r3m1"
+Gestão completa
+Riscos
+Timeline
+Documentos
+Memórias
+IA
+```
+
+### Especialistas
+
+```text id="n6k4t8"
+PM Agent
+Tech Agent
+Business Agent
+Finance Agent
+Personal Agent
+EAC Agent
+```
+
+---
+
+## Fase 3
+
+```text id="y2m7f5"
+Multiagentes
+Delegação
+Orquestração
+Planejamento
+Automações
+```
+
+---
+
+# Orientação ao Desenvolvedor
+
+Caso surjam dúvidas sobre:
+
+```text id="p8c1v3"
+Projetos
+Especialistas
+```
+
+a regra obrigatória é:
+
+```text id="s5h9k7"
+Implementar apenas a estrutura,
+persistência e interface.
+
+Não implementar inteligência,
+automação ou lógica avançada
+destes módulos no MVP.
+```
+
+---
+
+# Critério de Encerramento do MVP
+
+O MVP será considerado concluído quando:
+
+```text id="h4n2j6"
+O KAIROS conseguir:
+- conversar;
+- aprender;
+- lembrar;
+- consultar documentos;
+- responder contextualizado;
+- funcionar em desktop e mobile.
+```
+
+Os módulos:
+
+```text id="u7r5p2"
+Projetos
+Especialistas
+```
+
+serão considerados apenas preparados para expansão futura.

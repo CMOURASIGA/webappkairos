@@ -1,0 +1,495 @@
+# KAIROS AGENT
+
+## Product Requirements Document (PRD) - MVP v1.0
+
+**Versão:** 1.0
+**Data:** 04/07/2026
+**Responsável:** Christian Moura
+
+---
+
+# 1. Objetivo
+
+Construir um agente pessoal inteligente capaz de:
+
+* aprender através de orientações fornecidas pelo usuário;
+* consultar documentos previamente carregados;
+* manter memória persistente;
+* interagir através de chat;
+* ser acessível via Web e dispositivos móveis;
+* evoluir para múltiplos agentes especializados.
+
+---
+
+# 2. Requisitos Funcionais
+
+## RF001 - Autenticação
+
+O sistema deverá permitir:
+
+* Login por e-mail e senha;
+* Logout;
+* Recuperação de senha;
+* Atualização do perfil.
+
+### Campos
+
+```text
+Nome
+Email
+Senha
+Foto (opcional)
+```
+
+---
+
+## RF002 - Dashboard
+
+Após login, o usuário visualizará:
+
+```text
+Resumo de conversas
+Quantidade de memórias
+Quantidade de orientações
+Quantidade de documentos
+Últimas atividades
+```
+
+---
+
+## RF003 - Chat
+
+O sistema deverá permitir:
+
+* iniciar nova conversa;
+* continuar conversa existente;
+* renomear conversa;
+* excluir conversa;
+* salvar histórico.
+
+### Estrutura
+
+```text
+Usuário → pergunta
+
+Sistema:
+    ↓
+consulta memória
+    ↓
+consulta orientações
+    ↓
+consulta documentos
+    ↓
+gera resposta
+```
+
+---
+
+## RF004 - Orientações
+
+O usuário poderá ensinar o agente.
+
+### Campos
+
+```text
+Título
+Categoria
+Descrição
+Prioridade
+Ativo
+```
+
+### Exemplo
+
+```text
+Título:
+Gerenciamento de Projetos
+
+Descrição:
+Quando eu solicitar análise de projeto,
+considere prazo, custo, escopo, risco
+e impacto operacional.
+```
+
+---
+
+## RF005 - Memórias
+
+O sistema deverá armazenar:
+
+```text
+Projetos
+Clientes
+Preferências
+Decisões
+Pessoas
+Procedimentos
+Conhecimentos pessoais
+```
+
+### Estrutura
+
+```text
+Tipo
+Título
+Conteúdo
+Importância
+Origem
+Ativo
+```
+
+---
+
+## RF006 - Documentos
+
+O usuário poderá enviar:
+
+```text
+PDF
+DOCX
+TXT
+CSV
+XLSX
+```
+
+### Fluxo
+
+```text
+Upload
+    ↓
+Extração
+    ↓
+Chunking
+    ↓
+Embedding
+    ↓
+Indexação
+```
+
+---
+
+## RF007 - Busca Semântica
+
+O sistema deverá:
+
+```text
+Receber pergunta
+Buscar embeddings similares
+Retornar documentos relevantes
+Montar contexto
+Enviar para LLM
+```
+
+---
+
+# 3. Telas do Sistema
+
+## Tela 1
+
+```text
+Login
+```
+
+Campos:
+
+```text
+Email
+Senha
+Entrar
+Esqueci minha senha
+```
+
+---
+
+## Tela 2
+
+```text
+Dashboard
+```
+
+Widgets:
+
+```text
+Conversas
+Memórias
+Orientações
+Documentos
+Atividades recentes
+```
+
+---
+
+## Tela 3
+
+```text
+Chat
+```
+
+Recursos:
+
+```text
+Nova conversa
+Histórico
+Anexos
+Memória utilizada
+Documentos consultados
+```
+
+---
+
+## Tela 4
+
+```text
+Orientações
+```
+
+Ações:
+
+```text
+Criar
+Editar
+Excluir
+Ativar
+Desativar
+```
+
+---
+
+## Tela 5
+
+```text
+Memórias
+```
+
+Ações:
+
+```text
+Visualizar
+Editar
+Excluir
+Priorizar
+```
+
+---
+
+## Tela 6
+
+```text
+Documentos
+```
+
+Ações:
+
+```text
+Upload
+Reprocessar
+Excluir
+Visualizar chunks
+```
+
+---
+
+# 4. Estrutura do Projeto
+
+```text
+kairos-agent/
+
+src/
+ ├── app/
+ ├── components/
+ ├── hooks/
+ ├── services/
+ ├── lib/
+ ├── agents/
+ ├── rag/
+ ├── memory/
+ ├── prompts/
+ ├── types/
+ └── utils/
+
+database/
+ ├── migrations/
+ └── seeds/
+
+public/
+
+docs/
+```
+
+---
+
+# 5. Variáveis de Ambiente
+
+Arquivo:
+
+```bash
+.env.local
+```
+
+## Aplicação
+
+```bash
+NODE_ENV=development
+
+NEXT_PUBLIC_APP_NAME=Kairos Agent
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+---
+
+## Supabase
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+
+SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_JWT_SECRET=
+```
+
+---
+
+## PostgreSQL
+
+```bash
+DATABASE_URL=
+
+DIRECT_URL=
+```
+
+---
+
+## OpenAI
+
+```bash
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-5
+OPENAI_EMBEDDING_MODEL=text-embedding-3-large
+```
+
+---
+
+## Azure OpenAI (opcional)
+
+```bash
+AZURE_OPENAI_ENDPOINT=
+AZURE_OPENAI_API_KEY=
+AZURE_OPENAI_API_VERSION=
+AZURE_OPENAI_DEPLOYMENT=
+AZURE_OPENAI_EMBEDDING_DEPLOYMENT=
+```
+
+---
+
+## Storage
+
+```bash
+STORAGE_PROVIDER=supabase
+SUPABASE_STORAGE_BUCKET=documents
+```
+
+---
+
+## Upload
+
+```bash
+MAX_UPLOAD_SIZE=52428800
+ALLOWED_EXTENSIONS=pdf,docx,txt,csv,xlsx
+```
+
+---
+
+## Vetorização
+
+```bash
+VECTOR_DIMENSIONS=3072
+CHUNK_SIZE=1000
+CHUNK_OVERLAP=200
+TOP_K_RESULTS=10
+```
+
+---
+
+## Logs
+
+```bash
+LOG_LEVEL=debug
+ENABLE_TRACING=true
+```
+
+---
+
+## Segurança
+
+```bash
+ENCRYPTION_KEY=
+JWT_SECRET=
+SESSION_SECRET=
+```
+
+---
+
+# 6. Fluxo Principal
+
+```text
+Usuário
+    ↓
+Chat
+    ↓
+Buscar orientações
+    ↓
+Buscar memória
+    ↓
+Buscar documentos
+    ↓
+Busca vetorial
+    ↓
+Montar contexto
+    ↓
+OpenAI
+    ↓
+Resposta
+    ↓
+Salvar histórico
+```
+
+---
+
+# 7. Roadmap
+
+## Sprint 1
+
+* Infraestrutura
+* Supabase
+* Login
+* Chat
+
+## Sprint 2
+
+* Histórico
+* Memória
+* Orientações
+
+## Sprint 3
+
+* Upload
+* RAG
+* Embeddings
+
+## Sprint 4
+
+* Dashboard
+* PWA
+* Mobile
+
+## Sprint 5
+
+* Agentes especializados
+* Aprendizado supervisionado
+* Memória avançada
+
+---
+
+# Definição do Produto
+
+> O KAIROS AGENT será um agente pessoal treinável, capaz de aprender continuamente através de instruções, documentos e experiências acumuladas do usuário.

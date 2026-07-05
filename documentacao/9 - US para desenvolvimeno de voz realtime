@@ -1,0 +1,424 @@
+# KAIROS AGENT
+
+## User Stories - Módulo de Conversação Realtime por Voz (Voice AI) - v1.0
+
+**Versão:** 1.0
+**Data:** 04/07/2026
+**Responsável:** Christian Moura
+
+---
+
+# Objetivo
+
+Permitir que Christian interaja com o KAIROS de forma natural através de voz, utilizando a mesma inteligência, memória, documentos e contexto já disponíveis no chat textual.
+
+O usuário deverá sentir que está conversando com uma inteligência presente, semelhante às experiências apresentadas pela Cortana (Halo) e JARVIS (Marvel).
+
+---
+
+# Arquitetura Conceitual
+
+```text
+Microfone
+      ↓
+Captura de áudio
+      ↓
+Transcrição em tempo real
+      ↓
+Motor do KAIROS
+      ↓
+Memórias
+      ↓
+Orientações
+      ↓
+Documentos
+      ↓
+Histórico
+      ↓
+Resposta da IA
+      ↓
+Síntese de voz
+      ↓
+Alto-falante
+```
+
+---
+
+# Variáveis de Ambiente
+
+Adicionar no arquivo:
+
+```bash
+.env.local
+```
+
+```bash
+ENABLE_REALTIME_VOICE=true
+
+OPENAI_REALTIME_MODEL=
+OPENAI_TRANSCRIPTION_MODEL=
+OPENAI_TTS_MODEL=
+
+VOICE_DEFAULT=alloy
+VOICE_LANGUAGE=pt-BR
+
+ENABLE_WAKE_WORD=false
+WAKE_WORD=Kairos
+```
+
+---
+
+# US024 - Habilitar Conversação Realtime
+
+## História
+
+Como Christian, desejo conversar com o KAIROS por voz em tempo real para interagir de forma mais natural.
+
+## Critérios de Aceite
+
+* ativar/desativar modo voz;
+* capturar áudio do navegador;
+* iniciar sessão realtime;
+* manter conexão ativa;
+* encerrar sessão corretamente;
+* registrar logs da sessão.
+
+## Resultado
+
+```text
+OK - US024
+```
+
+---
+
+# US025 - Captura de Áudio
+
+## História
+
+Como Christian, desejo que meu áudio seja capturado automaticamente durante a conversa.
+
+## Critérios de Aceite
+
+* solicitar permissão do microfone;
+* exibir status do microfone;
+* detectar ausência de áudio;
+* detectar perda de dispositivo;
+* permitir troca de dispositivo.
+
+## Estados
+
+```text
+Idle
+Listening
+Muted
+Disconnected
+```
+
+## Resultado
+
+```text
+OK - US025
+```
+
+---
+
+# US026 - Transcrição Realtime
+
+## História
+
+Como Christian, desejo visualizar a transcrição da minha fala em tempo real.
+
+## Critérios de Aceite
+
+* transcrição parcial;
+* transcrição final;
+* atualização contínua;
+* suporte ao português;
+* correção de interrupções.
+
+## Resultado
+
+```text
+OK - US026
+```
+
+---
+
+# US027 - Integração com Motor do KAIROS
+
+## História
+
+Como Christian, desejo que o modo voz utilize exatamente o mesmo cérebro do chat.
+
+## Fluxo Obrigatório
+
+```text
+Fala
+    ↓
+Transcrição
+    ↓
+Memória
+    ↓
+Orientações
+    ↓
+Documentos
+    ↓
+Histórico
+    ↓
+LLM
+    ↓
+Resposta
+```
+
+## Critérios
+
+* reutilizar motor do chat;
+* reutilizar RAG;
+* reutilizar memórias;
+* reutilizar histórico.
+
+## Resultado
+
+```text
+OK - US027
+```
+
+---
+
+# US028 - Síntese de Voz
+
+## História
+
+Como Christian, desejo ouvir as respostas do KAIROS.
+
+## Critérios
+
+* sintetizar resposta;
+* voz natural;
+* controle de volume;
+* pausa;
+* retomada;
+* interrupção.
+
+## Configurações
+
+```text
+Velocidade
+Tom
+Volume
+Voz padrão
+Idioma
+```
+
+## Resultado
+
+```text
+OK - US028
+```
+
+---
+
+# US029 - OrbCore Realtime
+
+## História
+
+Como Christian, desejo visualizar o estado emocional e operacional do KAIROS.
+
+## Estados Visuais
+
+```text
+Idle
+Listening
+Thinking
+Searching
+Answering
+Learning
+Error
+```
+
+## Comportamentos
+
+### Listening
+
+```text
+Pulso azul
+Ondas sonoras
+Halo expandindo
+```
+
+### Thinking
+
+```text
+Partículas orbitando
+Rotação acelerada
+Brilho intenso
+```
+
+### Answering
+
+```text
+Pulsação sincronizada
+Animação de voz
+```
+
+## Resultado
+
+```text
+OK - US029
+```
+
+---
+
+# US030 - Histórico Unificado
+
+## História
+
+Como Christian, desejo que conversas por voz e texto sejam armazenadas juntas.
+
+## Critérios
+
+Salvar:
+
+```text
+Texto original
+Transcrição
+Áudio opcional
+Resposta
+Contexto utilizado
+Modelo
+Tempo
+```
+
+## Resultado
+
+```text
+OK - US030
+```
+
+---
+
+# US031 - Interrupção Natural
+
+## História
+
+Como Christian, desejo interromper o KAIROS durante a fala.
+
+## Critérios
+
+* detectar interrupção;
+* parar TTS;
+* iniciar nova escuta;
+* continuar contexto.
+
+## Exemplo
+
+```text
+KAIROS:
+"Christian, encontrei três alternativas..."
+
+Christian:
+"Pare. Me explique a segunda."
+
+KAIROS:
+"Entendido."
+```
+
+## Resultado
+
+```text
+OK - US031
+```
+
+---
+
+# US032 - Ativação por Palavra-Chave (Opcional)
+
+## História
+
+Como Christian, desejo ativar o KAIROS por voz.
+
+## Palavra Inicial
+
+```text
+Kairos
+```
+
+## Critérios
+
+* detectar wake word;
+* iniciar sessão;
+* ignorar falsos positivos;
+* permitir desligar.
+
+## Resultado
+
+```text
+OK - US032
+```
+
+---
+
+# US033 - Modo Assistente Flutuante
+
+## História
+
+Como Christian, desejo manter o KAIROS disponível enquanto trabalho.
+
+## Funcionalidades
+
+* mini janela flutuante;
+* modo compacto;
+* continuar escutando;
+* abrir interface completa.
+
+## Resultado
+
+```text
+OK - US033
+```
+
+---
+
+# US034 - Configurações de Voz
+
+## História
+
+Como Christian, desejo personalizar a voz do KAIROS.
+
+## Configurações
+
+```text
+Idioma
+Volume
+Velocidade
+Tom
+Voz
+Sensibilidade
+Wake word
+Resposta automática
+```
+
+## Resultado
+
+```text
+OK - US034
+```
+
+---
+
+# Critério Final de Aceite
+
+O módulo de voz será considerado concluído quando Christian puder:
+
+```text
+1. Abrir o KAIROS.
+2. Clicar em conversar.
+3. Falar naturalmente.
+4. Ver a transcrição.
+5. Ouvir a resposta.
+6. Interromper o agente.
+7. Continuar a conversa.
+8. Salvar todo o histórico.
+9. Utilizar memórias e documentos.
+10. Fazer tudo isso tanto no desktop quanto no celular.
+```

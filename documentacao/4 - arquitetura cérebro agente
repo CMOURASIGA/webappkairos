@@ -1,0 +1,342 @@
+# KAIROS AGENT
+
+## Arquitetura do Cérebro do Agente (Agent Brain Architecture) - v1.0
+
+**Versão:** 1.0
+**Data:** 04/07/2026
+
+---
+
+# Objetivo
+
+O KAIROS não deve responder diretamente ao usuário.
+
+Antes de qualquer resposta, ele deverá executar um processo interno de raciocínio e recuperação de contexto.
+
+---
+
+# Fluxo Principal
+
+```text
+USUÁRIO
+    ↓
+ENTRADA DA PERGUNTA
+    ↓
+CLASSIFICADOR DE INTENÇÃO
+    ↓
+BUSCA DE MEMÓRIA
+    ↓
+BUSCA DE ORIENTAÇÕES
+    ↓
+BUSCA DE DOCUMENTOS
+    ↓
+BUSCA DE HISTÓRICO
+    ↓
+MONTAGEM DO CONTEXTO
+    ↓
+LLM
+    ↓
+VALIDAÇÃO
+    ↓
+RESPOSTA
+    ↓
+PERSISTÊNCIA
+```
+
+---
+
+# Etapa 1 - Entrada
+
+Exemplo:
+
+```text
+"Como devo conduzir o projeto da Desata?"
+```
+
+Estrutura interna:
+
+```json
+{
+  "user_id": "uuid",
+  "conversation_id": "uuid",
+  "message": "Como devo conduzir o projeto da Desata?",
+  "timestamp": "2026-07-04T21:00:00"
+}
+```
+
+---
+
+# Etapa 2 - Classificador
+
+O agente deve identificar:
+
+* assunto;
+* criticidade;
+* categoria;
+* necessidade de memória;
+* necessidade de documentos;
+* necessidade de histórico.
+
+Exemplo:
+
+```json
+{
+  "topic": "projetos",
+  "entity": "Desata",
+  "use_memory": true,
+  "use_documents": true,
+  "use_history": true,
+  "priority": "high"
+}
+```
+
+---
+
+# Etapa 3 - Recuperação de Memória
+
+Consulta:
+
+```sql
+memories
+```
+
+Critérios:
+
+* maior importância;
+* maior relevância semântica;
+* mais recente;
+* memória ativa.
+
+Exemplo:
+
+```text
+Cliente: Desata
+Área: financiamento habitacional
+CRM utilizado: Kommo
+Projeto: implantação WhatsApp API
+```
+
+---
+
+# Etapa 4 - Recuperação de Orientações
+
+Consulta:
+
+```sql
+instructions
+```
+
+Exemplo:
+
+```text
+Quando Christian pedir análise de projeto:
+- analisar prazo;
+- analisar custo;
+- analisar risco;
+- analisar impacto operacional.
+```
+
+---
+
+# Etapa 5 - Recuperação Documental
+
+Consulta:
+
+```sql
+document_chunks
+```
+
+Fluxo:
+
+```text
+Pergunta
+    ↓
+Embedding
+    ↓
+Busca vetorial
+    ↓
+Top K resultados
+```
+
+Exemplo:
+
+```text
+Contrato
+Ata
+Planejamento
+Documentação técnica
+```
+
+---
+
+# Etapa 6 - Recuperação de Histórico
+
+Consulta:
+
+```sql
+conversations
+messages
+```
+
+Objetivo:
+
+* manter contexto;
+* recuperar decisões;
+* evitar repetição;
+* preservar continuidade.
+
+---
+
+# Etapa 7 - Construção do Contexto
+
+Estrutura enviada ao modelo:
+
+```text
+PERFIL
++
+MEMÓRIAS
++
+ORIENTAÇÕES
++
+DOCUMENTOS
++
+HISTÓRICO
++
+PERGUNTA ATUAL
+```
+
+Exemplo:
+
+```text
+Você é o KAIROS.
+
+Perfil:
+Christian Moura.
+
+Orientações:
+Analisar projetos considerando prazo, custo e riscos.
+
+Memórias:
+Cliente Desata utiliza Kommo.
+
+Documentos:
+Plano de implantação versão 2.
+
+Pergunta:
+Como devo conduzir este projeto?
+```
+
+---
+
+# Etapa 8 - Resposta da IA
+
+Modelos iniciais:
+
+```text
+gpt-5
+gpt-5-mini
+Azure OpenAI GPT-5
+```
+
+Parâmetros:
+
+```text
+temperature: 0.3
+max_tokens: 4000
+top_p: 1
+```
+
+---
+
+# Etapa 9 - Validação
+
+Verificações:
+
+* resposta vazia;
+* baixa confiança;
+* alucinação provável;
+* ausência de contexto.
+
+Exemplo:
+
+```json
+{
+  "confidence": 92,
+  "hallucination_risk": "low",
+  "approved": true
+}
+```
+
+---
+
+# Etapa 10 - Persistência
+
+Salvar:
+
+```text
+Pergunta
+Contexto utilizado
+Resposta
+Tokens
+Modelo
+Tempo
+Confiança
+```
+
+Tabela:
+
+```sql
+agent_executions
+```
+
+---
+
+# Aprendizado Supervisionado
+
+O agente poderá sugerir aprendizado:
+
+Exemplo:
+
+```text
+Percebi que você mencionou que
+"projetos críticos possuem impacto financeiro".
+
+Deseja salvar este conhecimento?
+```
+
+Tabela:
+
+```sql
+learned_knowledge
+```
+
+---
+
+# Especialistas Futuros
+
+```text
+KAIROS MASTER
+        │
+        ├── PM AGENT
+        ├── TECH AGENT
+        ├── FINANCE AGENT
+        ├── PERSONAL AGENT
+        ├── EAC AGENT
+        └── BUSINESS AGENT
+```
+
+---
+
+# Princípio Fundamental
+
+```text
+O KAIROS nunca responde apenas pela LLM.
+
+Ele sempre responde utilizando:
+
+MEMÓRIA
++ ORIENTAÇÕES
++ DOCUMENTOS
++ HISTÓRICO
++ RACIOCÍNIO
+```

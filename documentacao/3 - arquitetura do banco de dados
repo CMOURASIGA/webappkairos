@@ -1,0 +1,272 @@
+# KAIROS AGENT
+
+## Modelo Físico Inicial do Banco de Dados (Supabase/PostgreSQL)
+
+**Versão:** 1.0
+**Data:** 04/07/2026
+
+---
+
+# Extensões
+
+```sql
+create extension if not exists "uuid-ossp";
+create extension if not exists "vector";
+```
+
+---
+
+# Tabela de Perfis
+
+```sql
+create table profiles (
+    id uuid primary key default uuid_generate_v4(),
+    auth_user_id uuid unique not null,
+    nome varchar(255) not null,
+    email varchar(255) unique not null,
+    avatar_url text,
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+);
+```
+
+---
+
+# Conversas
+
+```sql
+create table conversations (
+    id uuid primary key default uuid_generate_v4(),
+    profile_id uuid not null references profiles(id) on delete cascade,
+    titulo varchar(255),
+    status varchar(30) default 'ACTIVE',
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+);
+```
+
+---
+
+# Mensagens
+
+```sql
+create table messages (
+    id uuid primary key default uuid_generate_v4(),
+    conversation_id uuid not null references conversations(id) on delete cascade,
+    role varchar(20) not null,
+    content text not null,
+    tokens integer,
+    model varchar(100),
+    created_at timestamptz default now()
+);
+
+create index idx_messages_conversation
+on messages(conversation_id);
+```
+
+---
+
+# Orientações do Agente
+
+```sql
+create table instructions (
+    id uuid primary key default uuid_generate_v4(),
+    profile_id uuid not null references profiles(id) on delete cascade,
+    titulo varchar(255) not null,
+    categoria varchar(100),
+    conteudo text not null,
+    prioridade integer default 5,
+    ativo boolean default true,
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+);
+
+create index idx_instructions_profile
+on instructions(profile_id);
+```
+
+---
+
+# Memórias
+
+```sql
+create table memories (
+    id uuid primary key default uuid_generate_v4(),
+    profile_id uuid not null references profiles(id) on delete cascade,
+    tipo varchar(100),
+    titulo varchar(255),
+    conteudo text not null,
+    importancia integer default 5,
+    origem varchar(100),
+    ativo boolean default true,
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+);
+
+create index idx_memories_profile
+on memories(profile_id);
+
+create index idx_memories_tipo
+on memories(tipo);
+```
+
+---
+
+# Documentos
+
+```sql
+create table documents (
+    id uuid primary key default uuid_generate_v4(),
+    profile_id uuid not null references profiles(id) on delete cascade,
+    nome_arquivo varchar(255),
+    mime_type varchar(100),
+    tamanho bigint,
+    storage_path text,
+    status varchar(50) default 'PROCESSING',
+    created_at timestamptz default now()
+);
+
+create index idx_documents_profile
+on documents(profile_id);
+```
+
+---
+
+# Chunks dos Documentos
+
+```sql
+create table document_chunks (
+    id uuid primary key default uuid_generate_v4(),
+    document_id uuid not null references documents(id) on delete cascade,
+    chunk_index integer,
+    content text not null,
+    metadata jsonb,
+    embedding vector(3072),
+    created_at timestamptz default now()
+);
+
+create index idx_document_chunks_document
+on document_chunks(document_id);
+```
+
+---
+
+# Histórico de Execução do Agente
+
+```sql
+create table agent_executions (
+    id uuid primary key default uuid_generate_v4(),
+    profile_id uuid not null references profiles(id) on delete cascade,
+    conversation_id uuid references conversations(id),
+    pergunta text,
+    contexto jsonb,
+    resposta text,
+    modelo varchar(100),
+    tempo_execucao_ms integer,
+    created_at timestamptz default now()
+);
+```
+
+---
+
+# Conhecimentos Extraídos Automaticamente
+
+```sql
+create table learned_knowledge (
+    id uuid primary key default uuid_generate_v4(),
+    profile_id uuid not null references profiles(id) on delete cascade,
+    origem varchar(100),
+    titulo varchar(255),
+    conteudo text,
+    confianca numeric(5,2),
+    aprovado boolean default false,
+    created_at timestamptz default now()
+);
+```
+
+---
+
+# Configurações do Agente
+
+```sql
+create table agent_settings (
+    id uuid primary key default uuid_generate_v4(),
+    profile_id uuid not null references profiles(id) on delete cascade,
+    nome_agente varchar(100),
+    personalidade text,
+    modelo_chat varchar(100),
+    modelo_embedding varchar(100),
+    temperatura numeric(3,2) default 0.3,
+    max_tokens integer default 4000,
+    ativo boolean default true,
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+);
+```
+
+---
+
+# Fluxo de Consulta
+
+```text
+Usuário
+   ↓
+Conversations
+   ↓
+Messages
+   ↓
+Instructions
+   ↓
+Memories
+   ↓
+Documents
+   ↓
+Document Chunks
+   ↓
+Embeddings
+   ↓
+OpenAI/Azure OpenAI
+   ↓
+Resposta
+   ↓
+Agent Executions
+```
+
+---
+
+# Estrutura Inicial de Categorias
+
+```text
+MEMORY_TYPES
+
+PERSONAL
+PROFESSIONAL
+PROJECT
+CLIENT
+PROCESS
+DECISION
+PREFERENCE
+CONTACT
+FINANCIAL
+TECHNICAL
+SPIRITUAL
+FAMILY
+```
+
+---
+
+# Próxima Entrega
+
+```text
+001_create_extensions.sql
+002_create_profiles.sql
+003_create_conversations.sql
+004_create_messages.sql
+005_create_instructions.sql
+006_create_memories.sql
+007_create_documents.sql
+008_create_document_chunks.sql
+009_create_agent_executions.sql
+010_create_agent_settings.sql
+011_rls_policies.sql
+```

@@ -1,0 +1,506 @@
+# KAIROS AGENT
+
+## Especificação Funcional e Visual das Interfaces - v1.0
+
+**Versão:** 1.0
+**Data:** 04/07/2026
+
+---
+
+# Conceito Visual
+
+## Inspirações
+
+### Referência 1
+
+Cortana (Halo)
+
+Características desejadas:
+
+* sensação de presença constante;
+* elementos holográficos;
+* animações fluidas;
+* inteligência "viva";
+* avatar opcional;
+* efeitos de profundidade.
+
+### Referência 2
+
+JARVIS (Marvel)
+
+Características desejadas:
+
+* central de comando;
+* dashboards inteligentes;
+* visual tecnológico premium;
+* múltiplos painéis contextuais;
+* informações em tempo real;
+* sensação de controle total.
+
+---
+
+# Identidade Visual do KAIROS
+
+## Paleta principal
+
+```text
+Background principal:
+#050A18
+
+Background secundário:
+#0B1226
+
+Azul holográfico:
+#00AEEF
+
+Azul intenso:
+#1B6EFF
+
+Ciano:
+#00E5FF
+
+Branco:
+#F5F7FA
+
+Verde sucesso:
+#22C55E
+
+Laranja alerta:
+#F97316
+
+Vermelho crítico:
+#EF4444
+```
+
+---
+
+# Experiência Esperada
+
+O usuário deve sentir que:
+
+```text
+KAIROS está presente
+KAIROS está ouvindo
+KAIROS está aprendendo
+KAIROS está pensando
+KAIROS lembra do passado
+KAIROS auxilia decisões
+```
+
+---
+
+# Estrutura Principal
+
+```text
+┌──────────────────────────────┐
+│ Sidebar Inteligente          │
+├──────────────────────────────┤
+│ Dashboard                    │
+│ Chat                         │
+│ Memórias                     │
+│ Orientações                  │
+│ Documentos                   │
+│ Projetos                     │
+│ Especialistas                │
+│ Configurações                │
+└──────────────────────────────┘
+```
+
+---
+
+# Tela 1 - Login
+
+## Objetivo
+
+Criar sensação de acesso ao núcleo do agente.
+
+## Componentes
+
+```text
+Logo KAIROS animado
+Campo e-mail
+Campo senha
+Botão entrar
+Recuperação de senha
+Login Microsoft
+Login Google
+```
+
+## Elementos visuais
+
+```text
+Partículas animadas
+Halo holográfico
+Pulso luminoso
+Animação de boot
+```
+
+---
+
+# Tela 2 - Dashboard
+
+## Objetivo
+
+Ser o centro de comando do usuário.
+
+---
+
+## Layout
+
+```text
+┌──────────────────────────┐
+│ Saudação                 │
+├──────────────────────────┤
+│ Conversas                │
+│ Memórias                 │
+│ Documentos               │
+│ Projetos                 │
+├──────────────────────────┤
+│ Atividades recentes      │
+├──────────────────────────┤
+│ Recomendações do KAIROS  │
+└──────────────────────────┘
+```
+
+---
+
+## Widgets
+
+### Conversas
+
+```text
+Ativas
+Arquivadas
+Última interação
+```
+
+### Memórias
+
+```text
+Total
+Críticas
+Novas
+```
+
+### Documentos
+
+```text
+Indexados
+Processando
+Erro
+```
+
+### Recomendações
+
+Exemplo:
+
+```text
+Christian,
+identifiquei 3 documentos relacionados
+ao projeto Desata que podem impactar
+a próxima reunião.
+```
+
+---
+
+# Tela 3 - Chat Principal
+
+## Objetivo
+
+Ser a principal interface de trabalho.
+
+---
+
+## Layout
+
+```text
+┌────────┬────────────────────┬──────────┐
+│ Histórico │ Conversa Atual │ Contexto │
+└────────┴────────────────────┴──────────┘
+```
+
+---
+
+## Coluna esquerda
+
+```text
+Nova conversa
+Pesquisar
+Favoritos
+Histórico
+Pastas
+```
+
+---
+
+## Área central
+
+```text
+Chat
+Anexos
+Áudio
+Código
+Documentos
+```
+
+---
+
+## Painel direito
+
+Mostrar:
+
+```text
+Memórias utilizadas
+Orientações aplicadas
+Documentos consultados
+Projetos relacionados
+Especialistas envolvidos
+```
+
+---
+
+## Exemplo
+
+```text
+Pergunta:
+
+Como conduzir o projeto Desata?
+
+Contexto utilizado:
+
+✓ Cliente Desata
+✓ Projeto Kommo
+✓ Documento implantação
+✓ Orientação gerenciamento
+✓ Histórico anterior
+```
+
+---
+
+# Tela 4 - Memórias
+
+## Objetivo
+
+Permitir visualizar tudo que o agente sabe.
+
+---
+
+## Categorias
+
+```text
+Pessoal
+Profissional
+Projetos
+Clientes
+Financeiro
+Processos
+Decisões
+Preferências
+Família
+EAC
+```
+
+---
+
+## Visualização
+
+```text
+Título
+Categoria
+Importância
+Último uso
+Fonte
+Status
+```
+
+---
+
+# Tela 5 - Orientações
+
+## Objetivo
+
+Ensinar o agente.
+
+---
+
+## Exemplo
+
+```text
+Título:
+Gerenciamento de Projetos
+
+Prioridade:
+10
+
+Descrição:
+Sempre analisar prazo,
+custo, risco e impacto.
+```
+
+---
+
+# Tela 6 - Documentos
+
+## Objetivo
+
+Administrar conhecimento documental.
+
+---
+
+## Informações
+
+```text
+Nome
+Categoria
+Data
+Status
+Chunks
+Embeddings
+Último acesso
+```
+
+---
+
+## Visualização lateral
+
+```text
+Resumo do documento
+Entidades encontradas
+Memórias relacionadas
+Projetos relacionados
+```
+
+---
+
+# Tela 7 - Projetos
+
+## Objetivo
+
+Criar memória permanente de projetos.
+
+---
+
+## Campos
+
+```text
+Nome
+Cliente
+Descrição
+Status
+Responsável
+Riscos
+Documentos
+Decisões
+Histórico
+```
+
+---
+
+# Tela 8 - Especialistas
+
+## Objetivo
+
+Visualizar agentes internos.
+
+---
+
+## Estrutura
+
+```text
+KAIROS MASTER
+
+PM AGENT
+TECH AGENT
+BUSINESS AGENT
+FINANCE AGENT
+PERSONAL AGENT
+EAC AGENT
+```
+
+---
+
+# Tela 9 - Configurações
+
+## Configurações do agente
+
+```text
+Nome
+Personalidade
+Modelo
+Temperatura
+Memória
+Retenção
+Especialistas ativos
+```
+
+---
+
+# Avatar do KAIROS
+
+## Modo 1
+
+```text
+Orb holográfico
+```
+
+Inspirado na Cortana.
+
+---
+
+## Modo 2
+
+```text
+Avatar humano digital
+```
+
+Características:
+
+```text
+Masculino ou neutro
+Semi holográfico
+Azul translúcido
+Expressões discretas
+```
+
+---
+
+# Modos de Interface
+
+## Modo Operacional
+
+Inspirado no JARVIS.
+
+```text
+Dashboards
+Painéis
+Dados
+Projetos
+```
+
+---
+
+## Modo Conversacional
+
+Inspirado na Cortana.
+
+```text
+Foco no diálogo
+Avatar
+Animações
+Presença
+```
+
+---
+
+# Sensações que o usuário deve perceber
+
+```text
+Presença
+Inteligência
+Memória
+Confiança
+Organização
+Estratégia
+Controle
+Companheirismo profissional
+```

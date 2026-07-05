@@ -1,0 +1,582 @@
+# KAIROS AGENT
+
+## Taxonomia Mestre da Base de Conhecimento (Master Knowledge Framework) - v1.0
+
+**Versão:** 1.0
+**Data:** 05/07/2026
+**Responsável:** Christian Moura
+
+---
+
+# Objetivo
+
+Esta estrutura define todo o conhecimento que o KAIROS deverá possuir ao longo de sua evolução.
+
+A base de conhecimento será organizada em cinco camadas principais:
+
+```text id="l8q3mf"
+IDENTIDADE
+CONHECIMENTO
+EXPERIÊNCIA
+CONTEXTO
+INTELIGÊNCIA
+```
+
+---
+
+# CAMADA 1 - IDENTIDADE
+
+## Objetivo
+
+Permitir que o KAIROS compreenda quem é Christian.
+
+---
+
+## 1.1 Perfil Pessoal
+
+Cadastrar:
+
+```text id="s4mz8p"
+Nome completo
+Apelidos
+Data nascimento
+Cidade
+Estado
+Profissão
+Objetivos pessoais
+Objetivos profissionais
+Valores
+Interesses
+Hobbies
+Religião
+Família
+```
+
+---
+
+## 1.2 Perfil Cognitivo
+
+Cadastrar:
+
+```text id="e2v9qx"
+Forma de pensar
+Tomada de decisão
+Nível de detalhamento
+Estilo de aprendizagem
+Perfil comportamental
+Perfil de liderança
+```
+
+---
+
+## 1.3 Preferências
+
+Cadastrar:
+
+```text id="n6k2rc"
+Forma de resposta
+Nível técnico
+Formato de documentos
+Formato de apresentação
+Idioma
+Tom
+Estilo visual
+```
+
+---
+
+# CAMADA 2 - CONHECIMENTO
+
+## Objetivo
+
+Representar tudo que Christian sabe.
+
+---
+
+# 2.1 Gestão
+
+Cadastrar:
+
+```text id="s8y5fw"
+PMBOK
+SCRUM
+KANBAN
+LEAN
+OKR
+KPIs
+Gestão financeira
+Gestão operacional
+Gestão de pessoas
+Gestão estratégica
+```
+
+---
+
+# 2.2 Tecnologia
+
+Cadastrar:
+
+```text id="w3g1pd"
+Arquitetura
+Cloud
+Azure
+AWS
+Supabase
+PostgreSQL
+pgvector
+Next.js
+React
+Node
+Python
+APIs
+Integrações
+OpenAI
+Azure OpenAI
+RAG
+Agentes
+IA
+```
+
+---
+
+# 2.3 Desenvolvimento
+
+Cadastrar:
+
+```text id="u4t9ln"
+Frontend
+Backend
+Mobile
+DevOps
+Banco de dados
+Infraestrutura
+Segurança
+CI/CD
+Git
+GitHub
+```
+
+---
+
+# 2.4 Negócios
+
+Cadastrar:
+
+```text id="h7r5vq"
+CRM
+Marketing
+Vendas
+Relacionamento
+Consultoria
+Precificação
+Negociação
+Financeiro
+```
+
+---
+
+# CAMADA 3 - EXPERIÊNCIA
+
+## Objetivo
+
+Registrar tudo que Christian já viveu.
+
+---
+
+# 3.1 Histórico Profissional
+
+Cadastrar:
+
+```text id="m2v7sw"
+Empresas
+Cargos
+Projetos
+Resultados
+Experiências
+Conquistas
+Fracassos
+Aprendizados
+```
+
+---
+
+# 3.2 Projetos
+
+Cadastrar:
+
+```text id="t8j1fc"
+Nome
+Cliente
+Escopo
+Tecnologia
+Decisões
+Riscos
+Resultado
+Lições aprendidas
+```
+
+---
+
+# 3.3 Clientes
+
+Cadastrar:
+
+```text id="a9n6qy"
+Cliente
+Segmento
+Contato
+Histórico
+Problemas
+Soluções
+Preferências
+```
+
+---
+
+# CAMADA 4 - CONTEXTO
+
+## Objetivo
+
+Permitir que o KAIROS compreenda o ambiente atual.
+
+---
+
+# 4.1 Ambiente Profissional
+
+Cadastrar:
+
+```text id="g4u2pk"
+Empresa atual
+Equipe
+Responsabilidades
+Ferramentas
+Metas
+Indicadores
+Projetos ativos
+```
+
+---
+
+# 4.2 Ambiente Pessoal
+
+Cadastrar:
+
+```text id="b6y8mr"
+Rotina
+Compromissos
+Objetivos
+Hábitos
+Prioridades
+```
+
+---
+
+# 4.3 Organizações
+
+Cadastrar:
+
+```text id="j1w5ht"
+EAC
+Paróquia
+Comunidades
+Projetos sociais
+Voluntariado
+```
+
+---
+
+# CAMADA 5 - INTELIGÊNCIA
+
+## Objetivo
+
+Ensinar o KAIROS a pensar como Christian.
+
+---
+
+# 5.1 Regras de Decisão
+
+Exemplos:
+
+```text id="r3k9vn"
+Projeto crítico:
+impacta operação ou receita.
+
+Fornecedor:
+avaliar custo, suporte e risco.
+
+Arquitetura:
+priorizar simplicidade.
+
+IA:
+priorizar custo-benefício.
+```
+
+---
+
+# 5.2 Frameworks Pessoais
+
+Cadastrar:
+
+```text id="o8c2lf"
+Como Christian analisa projetos.
+Como Christian analisa pessoas.
+Como Christian analisa tecnologia.
+Como Christian analisa negócios.
+Como Christian toma decisões.
+```
+
+---
+
+# 5.3 Heurísticas
+
+Cadastrar:
+
+```text id="i5t7qp"
+Regras práticas.
+Experiências anteriores.
+Erros conhecidos.
+Boas práticas.
+Atalhos mentais.
+```
+
+---
+
+# 5.4 Lições Aprendidas
+
+Cadastrar:
+
+```text id="k9u4mb"
+Problema.
+Contexto.
+Decisão tomada.
+Resultado.
+Aprendizado.
+```
+
+---
+
+# BASE DOCUMENTAL
+
+## Categoria 1
+
+```text id="d2n8qx"
+Contratos
+Propostas
+Escopos
+```
+
+---
+
+## Categoria 2
+
+```text id="v5j1sr"
+Arquiteturas
+Diagramas
+Desenvolvimento
+```
+
+---
+
+## Categoria 3
+
+```text id="p8m4cz"
+Projetos
+Atas
+Cronogramas
+```
+
+---
+
+## Categoria 4
+
+```text id="y7f3kw"
+Materiais de estudo
+Cursos
+Livros
+Pesquisas
+```
+
+---
+
+## Categoria 5
+
+```text id="h2r6ln"
+Documentos pessoais
+Planejamentos
+Objetivos
+```
+
+---
+
+# BASE DE MEMÓRIAS
+
+## Prioridade 10
+
+```text id="m4p8tx"
+Família
+Valores
+Objetivos
+Decisões críticas
+Projetos ativos
+```
+
+---
+
+## Prioridade 8
+
+```text id="s1w7vq"
+Clientes
+Processos
+Tecnologias
+Experiências
+```
+
+---
+
+## Prioridade 5
+
+```text id="g9n2cr"
+Histórico
+Contexto
+Conhecimentos auxiliares
+```
+
+---
+
+# BASE DE ORIENTAÇÕES
+
+## Orientações pessoais
+
+Meta:
+
+```text id="x5u8lk"
+25 orientações
+```
+
+---
+
+## Orientações profissionais
+
+Meta:
+
+```text id="e3j9fw"
+50 orientações
+```
+
+---
+
+## Orientações técnicas
+
+Meta:
+
+```text id="r7m1pq"
+50 orientações
+```
+
+---
+
+## Orientações de comunicação
+
+Meta:
+
+```text id="n4v6bt"
+25 orientações
+```
+
+---
+
+# BASE DE PROJETOS
+
+Meta inicial:
+
+```text id="c8q5hy"
+50 projetos
+```
+
+Campos:
+
+```text id="a2j7rf"
+Cliente
+Descrição
+Objetivo
+Tecnologia
+Riscos
+Decisões
+Documentos
+Lições aprendidas
+```
+
+---
+
+# BASE DE ESPECIALISTAS FUTUROS
+
+```text id="u1m9kg"
+PM AGENT
+TECH AGENT
+BUSINESS AGENT
+FINANCE AGENT
+PERSONAL AGENT
+EAC AGENT
+```
+
+---
+
+# MÉTRICA DE MATURIDADE
+
+## Nível 1
+
+```text id="k4t2vp"
+50 memórias
+20 orientações
+20 documentos
+```
+
+---
+
+## Nível 2
+
+```text id="f6n8sw"
+200 memórias
+100 orientações
+100 documentos
+20 projetos
+```
+
+---
+
+## Nível 3
+
+```text id="z3p7qc"
+500 memórias
+200 orientações
+300 documentos
+50 projetos
+```
+
+---
+
+## Nível 4
+
+```text id="j8w1ml"
+1000 memórias
+300 orientações
+500 documentos
+100 projetos
+```
+
+---
+
+# OBJETIVO FINAL
+
+O KAIROS deverá ser capaz de responder:
+
+```text id="b5q9yr"
+Quem é Christian?
+Como Christian pensa?
+O que Christian sabe?
+O que Christian já fez?
+Quais decisões Christian costuma tomar?
+Quais erros Christian evita?
+Quais objetivos Christian possui?
+Como posso ajudá-lo melhor?
+```

@@ -1,0 +1,474 @@
+# KAIROS AGENT
+
+## Metodologia de Construção da Base de Conhecimento Completa
+
+**Versão:** 1.0
+**Data:** 05/07/2026
+**Responsável:** Christian Moura
+
+---
+
+# Objetivo
+
+Transformar o KAIROS em uma memória estendida permanente de Christian Moura, permitindo que o agente:
+
+* compreenda contexto;
+* recupere experiências passadas;
+* aprenda preferências;
+* preserve decisões;
+* auxilie profissional e pessoalmente.
+
+---
+
+# Regra Fundamental
+
+O conhecimento deverá ser dividido em 4 pilares:
+
+```text
+ORIENTAÇÕES
+MEMÓRIAS
+DOCUMENTOS
+PROJETOS
+```
+
+---
+
+# PILAR 1 - ORIENTAÇÕES
+
+As orientações representam COMO o KAIROS deve pensar.
+
+Tabela:
+
+```text
+instructions
+```
+
+---
+
+## Categoria: Perfil Profissional
+
+Exemplo:
+
+```text
+Título:
+Estilo de Gerenciamento
+
+Conteúdo:
+Christian prefere análises executivas,
+objetivas e orientadas à ação.
+Sempre apresentar:
+- riscos;
+- impacto;
+- recomendação;
+- próximos passos.
+```
+
+---
+
+## Categoria: Projetos
+
+Exemplo:
+
+```text
+Título:
+Análise de Projetos
+
+Conteúdo:
+Ao analisar projetos considerar:
+- prazo;
+- custo;
+- escopo;
+- riscos;
+- stakeholders;
+- impacto operacional.
+```
+
+---
+
+## Categoria: Tecnologia
+
+Exemplo:
+
+```text
+Título:
+Análise Técnica
+
+Conteúdo:
+Sempre apresentar:
+- causa provável;
+- alternativas;
+- riscos;
+- implementação.
+```
+
+---
+
+## Categoria: Comunicação
+
+Exemplo:
+
+```text
+Título:
+Estilo de Resposta
+
+Conteúdo:
+Responder de forma:
+- clara;
+- direta;
+- humana;
+- estratégica.
+```
+
+---
+
+# PILAR 2 - MEMÓRIAS
+
+As memórias representam O QUE o KAIROS sabe.
+
+Tabela:
+
+```text
+memories
+```
+
+---
+
+## Tipo PERSONAL
+
+```text
+Nome
+Família
+Interesses
+Objetivos
+Hábitos
+Preferências
+```
+
+---
+
+## Tipo PROFESSIONAL
+
+```text
+Cargo
+Experiências
+Certificações
+Competências
+Metodologias
+```
+
+---
+
+## Tipo TECHNICAL
+
+```text
+Stack preferida
+Arquiteturas
+Padrões
+Ferramentas
+Cloud
+IA
+```
+
+---
+
+## Tipo PROCESS
+
+```text
+Fluxos
+Procedimentos
+Checklists
+Boas práticas
+```
+
+---
+
+## Tipo DECISION
+
+Exemplo:
+
+```text
+Christian decidiu utilizar:
+
+Supabase
+Next.js
+OpenAI
+PWA
+```
+
+---
+
+## Tipo PREFERENCE
+
+Exemplo:
+
+```text
+Prefere:
+
+respostas práticas;
+sem marketing;
+sem exageros;
+orientadas à execução.
+```
+
+---
+
+# PILAR 3 - DOCUMENTOS
+
+Os documentos representam conhecimento consultável.
+
+Tabela:
+
+```text
+documents
+document_chunks
+```
+
+---
+
+# Categoria Projetos
+
+Adicionar:
+
+```text
+Escopo
+Propostas
+Cronogramas
+Documentação técnica
+Atas
+Arquiteturas
+```
+
+---
+
+# Categoria Negócios
+
+Adicionar:
+
+```text
+Clientes
+Contratos
+Comercial
+Processos
+Propostas
+```
+
+---
+
+# Categoria IA
+
+Adicionar:
+
+```text
+Prompts
+Arquiteturas
+RAG
+Agentes
+Estudos
+Benchmarks
+```
+
+---
+
+# Categoria Pessoal
+
+Adicionar:
+
+```text
+Objetivos
+Planejamento
+Estudos
+Finanças
+Anotações
+```
+
+---
+
+# Categoria EAC
+
+Adicionar:
+
+```text
+Histórico
+Eventos
+Participantes
+Planejamento
+Escalas
+Comunicações
+```
+
+---
+
+# PILAR 4 - PROJETOS
+
+Tabela:
+
+```text
+projects
+```
+
+---
+
+## Estrutura mínima
+
+```text
+Nome
+Cliente
+Descrição
+Status
+Objetivo
+Responsáveis
+Documentos
+Memórias
+Decisões
+```
+
+---
+
+# Base Inicial Recomendada
+
+## PROFISSIONAL
+
+Cadastrar:
+
+```text
+Inspira
+Consult Services
+Projetos atuais
+Clientes
+Integrações
+Azure
+Supabase
+OpenAI
+```
+
+---
+
+## PESSOAL
+
+Cadastrar:
+
+```text
+Perfil pessoal
+Objetivos
+Hábitos
+Estilo de trabalho
+Preferências
+```
+
+---
+
+## EAC
+
+Cadastrar:
+
+```text
+História
+Eventos
+Processos
+Funções
+Pessoas
+Comunicação
+```
+
+---
+
+## TECNOLOGIA
+
+Cadastrar:
+
+```text
+Next.js
+Supabase
+Azure
+OpenAI
+n8n
+WAHA
+Kommo
+Meta
+WhatsApp API
+```
+
+---
+
+# Ordem Recomendada de Alimentação
+
+## Fase 1
+
+```text
+Orientações
+```
+
+Objetivo:
+
+```text
+Ensinar como pensar.
+```
+
+---
+
+## Fase 2
+
+```text
+Memórias
+```
+
+Objetivo:
+
+```text
+Ensinar quem é Christian.
+```
+
+---
+
+## Fase 3
+
+```text
+Documentos
+```
+
+Objetivo:
+
+```text
+Ensinar o conhecimento.
+```
+
+---
+
+## Fase 4
+
+```text
+Projetos
+```
+
+Objetivo:
+
+```text
+Ensinar o contexto operacional.
+```
+
+---
+
+# Meta Inicial
+
+O KAIROS começará a se comportar como uma memória estendida real quando possuir aproximadamente:
+
+```text
+100 orientações
+500 memórias
+300 documentos
+50 projetos
+```
+
+---
+
+# Regra de Ouro
+
+```text
+Orientações ensinam COMO pensar.
+
+Memórias ensinam O QUE lembrar.
+
+Documentos ensinam O QUE consultar.
+
+Projetos ensinam EM QUAL contexto aplicar.
+```

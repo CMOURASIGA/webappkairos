@@ -1,0 +1,43 @@
+# Progresso de Desenvolvimento - KAIROS AGENT
+
+## MVP v1.0
+
+- [x] OK - US001 - Criar projeto base
+- [x] OK - US002 - Configurar Supabase
+- [x] OK - US003 - Criar migrations do banco
+- [x] OK - US004 - Implementar autenticacao
+- [x] OK - US005 - Criar layout visual KAIROS
+- [x] OK - US006 - Criar Dashboard
+- [x] OK - US007 - Criar Chat
+- [x] OK - US008 - Criar motor do agente
+- [x] OK - US009 - Criar tela de Orientacoes
+- [x] OK - US010 - Integrar orientacoes ao chat
+- [x] OK - US011 - Criar tela de Memorias
+- [x] OK - US012 - Integrar memorias ao chat
+- [x] OK - US013 - Criar upload de documentos
+- [x] OK - US014 - Criar extracao de texto
+- [x] OK - US015 - Criar chunking
+- [x] OK - US016 - Criar embeddings
+- [x] OK - US017 - Criar busca vetorial
+- [x] OK - US018 - Criar tela de Documentos
+- [x] OK - US019 - Criar painel contextual no chat
+- [x] OK - US020 - Criar PWA
+- [x] OK - US021 - Criar configuracoes do agente
+- [x] OK - US022 - Criar logs de execucao
+- [x] OK - US023 - Criar documento de progresso
+- [x] OK - US024 - Habilitar conversacao realtime
+- [x] OK - US025 - Captura de audio
+- [x] OK - US026 - Transcricao realtime
+- [x] OK - US027 - Integracao com motor do KAIROS
+- [x] OK - US028 - Sintese de voz
+- [x] OK - US029 - OrbCore realtime
+- [x] OK - US030 - Historico unificado
+- [x] OK - US031 - Interrupcao natural
+- [x] OK - US032 - Ativacao por palavra-chave
+- [x] OK - US033 - Modo assistente flutuante
+- [x] OK - US034 - Configuracoes de voz
+- [x] OK - US036 - Documentacao oficial da base criada
+- [x] OK - US037 - Categorias padrao implementadas
+- [x] OK - US038 - Formularios ajustados
+- [x] OK - US039 - Seed da taxonomia criada
+- [x] OK - US040 - Indicador de maturidade criado

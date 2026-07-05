@@ -1,0 +1,1110 @@
+# KAIROS AGENT
+
+## Pacote de Desenvolvimento para o Dev - MVP v1.0
+
+Data: 04/07/2026
+Responsável: Christian Moura
+
+---
+
+# 1. Objetivo
+
+Desenvolver o KAIROS AGENT, um WebApp PWA com agente pessoal treinável por:
+
+* orientações manuais;
+* documentos;
+* memórias estruturadas;
+* histórico de conversas;
+* base vetorial no Supabase.
+
+O sistema deverá funcionar via navegador desktop e mobile.
+
+---
+
+# 2. Regra Operacional para o Desenvolvimento
+
+O desenvolvimento deverá ser executado no Visual Studio Code.
+
+O dev/agente de desenvolvimento está autorizado a executar todas as etapas necessárias sem solicitar confirmação intermediária de Christian para cada decisão técnica simples.
+
+Sempre que uma User Story for concluída, marcar com:
+
+```text
+OK - US001
+OK - US002
+OK - US003
+```
+
+A cada finalização relevante, registrar no arquivo:
+
+```text
+docs/progresso-desenvolvimento.md
+```
+
+Formato:
+
+```text
+OK - US001 - Projeto Next.js criado
+OK - US002 - Supabase configurado
+OK - US003 - Login implementado
+```
+
+---
+
+# 3. Uso do .env.local
+
+As credenciais e variáveis necessárias já estarão no arquivo:
+
+```bash
+.env.local
+```
+
+O sistema deverá utilizar exclusivamente as variáveis desse arquivo.
+
+Não hardcodar credenciais no código.
+
+Variáveis esperadas:
+
+```bash
+NEXT_PUBLIC_APP_NAME=Kairos Agent
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_JWT_SECRET=
+
+DATABASE_URL=
+DIRECT_URL=
+
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-5
+OPENAI_EMBEDDING_MODEL=text-embedding-3-large
+
+AZURE_OPENAI_ENDPOINT=
+AZURE_OPENAI_API_KEY=
+AZURE_OPENAI_API_VERSION=
+AZURE_OPENAI_DEPLOYMENT=
+AZURE_OPENAI_EMBEDDING_DEPLOYMENT=
+
+STORAGE_PROVIDER=supabase
+SUPABASE_STORAGE_BUCKET=documents
+
+MAX_UPLOAD_SIZE=52428800
+ALLOWED_EXTENSIONS=pdf,docx,txt,csv,xlsx
+
+VECTOR_DIMENSIONS=3072
+CHUNK_SIZE=1000
+CHUNK_OVERLAP=200
+TOP_K_RESULTS=10
+
+LOG_LEVEL=debug
+ENABLE_TRACING=true
+
+ENCRYPTION_KEY=
+JWT_SECRET=
+SESSION_SECRET=
+```
+
+---
+
+# 4. Stack Técnica
+
+```text
+Frontend: Next.js 15
+Linguagem: TypeScript
+Estilo: TailwindCSS
+Componentes: Shadcn/UI
+Animações: Framer Motion
+Ícones: Lucide React
+Banco: Supabase PostgreSQL
+Vetores: pgvector
+Storage: Supabase Storage
+Auth: Supabase Auth
+IA: OpenAI API ou Azure OpenAI
+Mobile: PWA
+```
+
+---
+
+# 5. Identidade Visual
+
+O visual deverá misturar:
+
+```text
+40% Cortana, Halo
+40% JARVIS, Marvel
+20% identidade própria KAIROS
+```
+
+Características:
+
+* fundo escuro;
+* azul holográfico;
+* painéis translúcidos;
+* sensação de IA viva;
+* orb central animado;
+* dashboard estilo central de comando;
+* interface premium;
+* layout responsivo;
+* mobile como PWA.
+
+Paleta:
+
+```css
+--background-primary: #050A18;
+--background-secondary: #0B1226;
+--background-card: #111827;
+
+--cyan: #00E5FF;
+--blue: #1B6EFF;
+--light-blue: #00AEEF;
+
+--success: #22C55E;
+--warning: #F97316;
+--danger: #EF4444;
+```
+
+---
+
+# 6. Estrutura de Pastas
+
+```text
+kairos-agent/
+
+src/
+ ├── app/
+ ├── components/
+ ├── features/
+ ├── hooks/
+ ├── services/
+ ├── stores/
+ ├── types/
+ ├── utils/
+ ├── lib/
+ ├── agents/
+ ├── rag/
+ ├── memory/
+ └── prompts/
+
+database/
+ ├── migrations/
+ └── seeds/
+
+docs/
+ ├── arquitetura/
+ ├── requisitos/
+ ├── prompts/
+ └── progresso-desenvolvimento.md
+```
+
+---
+
+# 7. Tabelas do Supabase
+
+Criar no Supabase usando migrations.
+
+## Extensões
+
+```sql
+create extension if not exists "uuid-ossp";
+create extension if not exists "vector";
+```
+
+## profiles
+
+```sql
+create table if not exists profiles (
+    id uuid primary key default uuid_generate_v4(),
+    auth_user_id uuid unique not null,
+    nome varchar(255) not null,
+    email varchar(255) unique not null,
+    avatar_url text,
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+);
+```
+
+## conversations
+
+```sql
+create table if not exists conversations (
+    id uuid primary key default uuid_generate_v4(),
+    profile_id uuid not null references profiles(id) on delete cascade,
+    titulo varchar(255),
+    status varchar(30) default 'ACTIVE',
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+);
+```
+
+## messages
+
+```sql
+create table if not exists messages (
+    id uuid primary key default uuid_generate_v4(),
+    conversation_id uuid not null references conversations(id) on delete cascade,
+    role varchar(20) not null,
+    content text not null,
+    tokens integer,
+    model varchar(100),
+    created_at timestamptz default now()
+);
+
+create index if not exists idx_messages_conversation
+on messages(conversation_id);
+```
+
+## instructions
+
+```sql
+create table if not exists instructions (
+    id uuid primary key default uuid_generate_v4(),
+    profile_id uuid not null references profiles(id) on delete cascade,
+    titulo varchar(255) not null,
+    categoria varchar(100),
+    conteudo text not null,
+    prioridade integer default 5,
+    ativo boolean default true,
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+);
+
+create index if not exists idx_instructions_profile
+on instructions(profile_id);
+```
+
+## memories
+
+```sql
+create table if not exists memories (
+    id uuid primary key default uuid_generate_v4(),
+    profile_id uuid not null references profiles(id) on delete cascade,
+    tipo varchar(100),
+    titulo varchar(255),
+    conteudo text not null,
+    importancia integer default 5,
+    origem varchar(100),
+    ativo boolean default true,
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+);
+
+create index if not exists idx_memories_profile
+on memories(profile_id);
+
+create index if not exists idx_memories_tipo
+on memories(tipo);
+```
+
+## documents
+
+```sql
+create table if not exists documents (
+    id uuid primary key default uuid_generate_v4(),
+    profile_id uuid not null references profiles(id) on delete cascade,
+    nome_arquivo varchar(255),
+    mime_type varchar(100),
+    tamanho bigint,
+    storage_path text,
+    status varchar(50) default 'PROCESSING',
+    created_at timestamptz default now()
+);
+
+create index if not exists idx_documents_profile
+on documents(profile_id);
+```
+
+## document_chunks
+
+```sql
+create table if not exists document_chunks (
+    id uuid primary key default uuid_generate_v4(),
+    document_id uuid not null references documents(id) on delete cascade,
+    chunk_index integer,
+    content text not null,
+    metadata jsonb,
+    embedding vector(3072),
+    created_at timestamptz default now()
+);
+
+create index if not exists idx_document_chunks_document
+on document_chunks(document_id);
+```
+
+## agent_executions
+
+```sql
+create table if not exists agent_executions (
+    id uuid primary key default uuid_generate_v4(),
+    profile_id uuid not null references profiles(id) on delete cascade,
+    conversation_id uuid references conversations(id),
+    pergunta text,
+    contexto jsonb,
+    resposta text,
+    modelo varchar(100),
+    tempo_execucao_ms integer,
+    created_at timestamptz default now()
+);
+```
+
+## learned_knowledge
+
+```sql
+create table if not exists learned_knowledge (
+    id uuid primary key default uuid_generate_v4(),
+    profile_id uuid not null references profiles(id) on delete cascade,
+    origem varchar(100),
+    titulo varchar(255),
+    conteudo text,
+    confianca numeric(5,2),
+    aprovado boolean default false,
+    created_at timestamptz default now()
+);
+```
+
+## agent_settings
+
+```sql
+create table if not exists agent_settings (
+    id uuid primary key default uuid_generate_v4(),
+    profile_id uuid not null references profiles(id) on delete cascade,
+    nome_agente varchar(100),
+    personalidade text,
+    modelo_chat varchar(100),
+    modelo_embedding varchar(100),
+    temperatura numeric(3,2) default 0.3,
+    max_tokens integer default 4000,
+    ativo boolean default true,
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+);
+```
+
+---
+
+# 8. Funcionalidades do MVP
+
+## US001 - Criar projeto base
+
+Como Christian, quero que o projeto Next.js seja criado com TypeScript, Tailwind e estrutura inicial.
+
+Critérios:
+
+* projeto roda localmente;
+* Tailwind configurado;
+* estrutura de pastas criada;
+* `.env.local` lido corretamente.
+
+Marcar:
+
+```text
+OK - US001
+```
+
+---
+
+## US002 - Configurar Supabase
+
+Como Christian, quero que o sistema acesse o Supabase usando as variáveis do `.env.local`.
+
+Critérios:
+
+* client Supabase público configurado;
+* client Supabase admin configurado;
+* conexão testada;
+* erro tratado quando variável estiver ausente.
+
+Marcar:
+
+```text
+OK - US002
+```
+
+---
+
+## US003 - Criar migrations do banco
+
+Como Christian, quero que todas as tabelas iniciais sejam criadas no Supabase.
+
+Critérios:
+
+* migrations criadas;
+* tabelas criadas;
+* índices criados;
+* extensão vector habilitada;
+* script idempotente com `if not exists`.
+
+Marcar:
+
+```text
+OK - US003
+```
+
+---
+
+## US004 - Implementar autenticação
+
+Como Christian, quero acessar o sistema com login e senha.
+
+Critérios:
+
+* login;
+* logout;
+* proteção de rotas;
+* criação/associação de profile;
+* redirecionamento para dashboard.
+
+Marcar:
+
+```text
+OK - US004
+```
+
+---
+
+## US005 - Criar layout visual KAIROS
+
+Como Christian, quero uma interface futurista inspirada em Cortana e JARVIS.
+
+Critérios:
+
+* tema escuro;
+* sidebar;
+* cards holográficos;
+* orb animado;
+* layout responsivo;
+* base visual aplicada em todas as telas.
+
+Marcar:
+
+```text
+OK - US005
+```
+
+---
+
+## US006 - Criar Dashboard
+
+Como Christian, quero visualizar um resumo do meu agente.
+
+Critérios:
+
+* total de conversas;
+* total de memórias;
+* total de orientações;
+* total de documentos;
+* atividades recentes;
+* recomendações futuras simuladas ou vazias.
+
+Marcar:
+
+```text
+OK - US006
+```
+
+---
+
+## US007 - Criar Chat
+
+Como Christian, quero conversar com o KAIROS.
+
+Critérios:
+
+* criar conversa;
+* enviar mensagem;
+* receber resposta da IA;
+* salvar mensagens;
+* listar histórico;
+* continuar conversa existente.
+
+Marcar:
+
+```text
+OK - US007
+```
+
+---
+
+## US008 - Criar motor do agente
+
+Como Christian, quero que o KAIROS consulte contexto antes de responder.
+
+Fluxo obrigatório:
+
+```text
+Pergunta
+↓
+Buscar orientações ativas
+↓
+Buscar memórias ativas
+↓
+Buscar documentos relevantes
+↓
+Montar contexto
+↓
+Enviar para IA
+↓
+Salvar resposta
+```
+
+Marcar:
+
+```text
+OK - US008
+```
+
+---
+
+## US009 - Criar tela de Orientações
+
+Como Christian, quero cadastrar orientações para ensinar o agente.
+
+Campos:
+
+* título;
+* categoria;
+* conteúdo;
+* prioridade;
+* ativo.
+
+Ações:
+
+* criar;
+* editar;
+* excluir;
+* ativar;
+* desativar.
+
+Marcar:
+
+```text
+OK - US009
+```
+
+---
+
+## US010 - Integrar orientações ao chat
+
+Como Christian, quero que o agente use minhas orientações nas respostas.
+
+Critérios:
+
+* buscar orientações ativas;
+* priorizar por prioridade;
+* incluir no prompt;
+* registrar no contexto da execução.
+
+Marcar:
+
+```text
+OK - US010
+```
+
+---
+
+## US011 - Criar tela de Memórias
+
+Como Christian, quero visualizar e gerenciar memórias do agente.
+
+Campos:
+
+* tipo;
+* título;
+* conteúdo;
+* importância;
+* origem;
+* ativo.
+
+Ações:
+
+* criar;
+* editar;
+* excluir;
+* ativar;
+* desativar.
+
+Marcar:
+
+```text
+OK - US011
+```
+
+---
+
+## US012 - Integrar memórias ao chat
+
+Como Christian, quero que o agente use memórias relevantes antes de responder.
+
+Critérios:
+
+* buscar memórias ativas;
+* priorizar por importância;
+* incluir no contexto;
+* registrar uso em agent_executions.
+
+Marcar:
+
+```text
+OK - US012
+```
+
+---
+
+## US013 - Criar upload de documentos
+
+Como Christian, quero enviar documentos para a base do agente.
+
+Formatos:
+
+* PDF;
+* DOCX;
+* TXT;
+* CSV;
+* XLSX.
+
+Critérios:
+
+* upload para Supabase Storage;
+* registro na tabela documents;
+* status PROCESSING;
+* limite de tamanho respeitado.
+
+Marcar:
+
+```text
+OK - US013
+```
+
+---
+
+## US014 - Criar extração de texto
+
+Como Christian, quero que o sistema leia o conteúdo dos documentos.
+
+Critérios:
+
+* extrair texto de TXT;
+* extrair texto de PDF;
+* extrair texto de DOCX;
+* extrair dados de CSV/XLSX;
+* tratar erros;
+* atualizar status do documento.
+
+Marcar:
+
+```text
+OK - US014
+```
+
+---
+
+## US015 - Criar chunking
+
+Como Christian, quero que o texto dos documentos seja quebrado em partes menores.
+
+Critérios:
+
+* usar `CHUNK_SIZE`;
+* usar `CHUNK_OVERLAP`;
+* salvar chunks;
+* manter `chunk_index`.
+
+Marcar:
+
+```text
+OK - US015
+```
+
+---
+
+## US016 - Criar embeddings
+
+Como Christian, quero que os chunks sejam vetorizados.
+
+Critérios:
+
+* usar modelo do `.env.local`;
+* gerar embedding;
+* salvar em document_chunks;
+* respeitar `VECTOR_DIMENSIONS`.
+
+Marcar:
+
+```text
+OK - US016
+```
+
+---
+
+## US017 - Criar busca vetorial
+
+Como Christian, quero que o KAIROS consulte documentos por similaridade.
+
+Critérios:
+
+* gerar embedding da pergunta;
+* buscar Top K;
+* usar `TOP_K_RESULTS`;
+* retornar chunks relevantes;
+* incluir no contexto da IA.
+
+Marcar:
+
+```text
+OK - US017
+```
+
+---
+
+## US018 - Criar tela de Documentos
+
+Como Christian, quero visualizar documentos indexados.
+
+Critérios:
+
+* listar documentos;
+* status;
+* data;
+* chunks;
+* visualizar conteúdo extraído;
+* excluir documento;
+* reprocessar documento.
+
+Marcar:
+
+```text
+OK - US018
+```
+
+---
+
+## US019 - Criar painel contextual no chat
+
+Como Christian, quero ver o que o agente usou para responder.
+
+Exibir:
+
+* memórias utilizadas;
+* orientações aplicadas;
+* documentos consultados;
+* tokens;
+* modelo;
+* tempo de execução.
+
+Marcar:
+
+```text
+OK - US019
+```
+
+---
+
+## US020 - Criar PWA
+
+Como Christian, quero acessar o KAIROS no celular como aplicativo.
+
+Critérios:
+
+* manifest configurado;
+* ícone;
+* instalação mobile;
+* layout mobile;
+* service worker básico.
+
+Marcar:
+
+```text
+OK - US020
+```
+
+---
+
+## US021 - Criar configurações do agente
+
+Como Christian, quero configurar comportamento do KAIROS.
+
+Campos:
+
+* nome do agente;
+* personalidade;
+* modelo chat;
+* modelo embedding;
+* temperatura;
+* max tokens;
+* especialistas ativos.
+
+Marcar:
+
+```text
+OK - US021
+```
+
+---
+
+## US022 - Criar logs de execução
+
+Como Christian, quero que cada resposta registre sua execução.
+
+Salvar em:
+
+```text
+agent_executions
+```
+
+Dados:
+
+* pergunta;
+* contexto;
+* resposta;
+* modelo;
+* tempo;
+* conversation_id;
+* profile_id.
+
+Marcar:
+
+```text
+OK - US022
+```
+
+---
+
+## US023 - Criar documento de progresso
+
+Como Christian, quero acompanhar o avanço do desenvolvimento.
+
+Criar arquivo:
+
+```text
+docs/progresso-desenvolvimento.md
+```
+
+Conteúdo inicial:
+
+```markdown
+# Progresso de Desenvolvimento - KAIROS AGENT
+
+## MVP v1.0
+
+- [ ] US001 - Criar projeto base
+- [ ] US002 - Configurar Supabase
+- [ ] US003 - Criar migrations do banco
+- [ ] US004 - Implementar autenticação
+- [ ] US005 - Criar layout visual KAIROS
+- [ ] US006 - Criar Dashboard
+- [ ] US007 - Criar Chat
+- [ ] US008 - Criar motor do agente
+- [ ] US009 - Criar tela de Orientações
+- [ ] US010 - Integrar orientações ao chat
+- [ ] US011 - Criar tela de Memórias
+- [ ] US012 - Integrar memórias ao chat
+- [ ] US013 - Criar upload de documentos
+- [ ] US014 - Criar extração de texto
+- [ ] US015 - Criar chunking
+- [ ] US016 - Criar embeddings
+- [ ] US017 - Criar busca vetorial
+- [ ] US018 - Criar tela de Documentos
+- [ ] US019 - Criar painel contextual no chat
+- [ ] US020 - Criar PWA
+- [ ] US021 - Criar configurações do agente
+- [ ] US022 - Criar logs de execução
+```
+
+Ao concluir, alterar para:
+
+```markdown
+- [x] OK - US001 - Criar projeto base
+```
+
+Marcar:
+
+```text
+OK - US023
+```
+
+---
+
+# 9. System Prompt Mestre
+
+Criar arquivo:
+
+```text
+src/prompts/kairos-system-prompt.ts
+```
+
+Conteúdo base:
+
+```ts
+export const KAIROS_SYSTEM_PROMPT = `
+Você é o KAIROS, um agente pessoal inteligente criado exclusivamente para Christian Moura.
+
+Sua função é atuar como parceiro intelectual, consultor, assistente operacional e memória estendida.
+
+Antes de responder, você deve considerar:
+1. Orientações cadastradas.
+2. Memórias relevantes.
+3. Documentos relacionados.
+4. Histórico da conversa.
+5. Contexto da pergunta atual.
+
+Você nunca deve inventar memórias, documentos ou decisões.
+Quando não houver informação suficiente, diga claramente.
+
+Seu estilo deve ser claro, direto, prático e estratégico.
+
+Ao analisar projetos, considere:
+- escopo;
+- prazo;
+- custo;
+- riscos;
+- stakeholders;
+- impacto operacional;
+- viabilidade técnica;
+- próximos passos.
+
+Você deve ajudar Christian a tomar melhores decisões, organizar conhecimento e transformar informação em ação.
+`;
+```
+
+---
+
+# 10. Fluxo Técnico do Chat
+
+```text
+Usuário envia mensagem
+↓
+API recebe mensagem
+↓
+Cria conversa se necessário
+↓
+Salva mensagem do usuário
+↓
+Busca orientações ativas
+↓
+Busca memórias ativas
+↓
+Gera embedding da pergunta
+↓
+Busca chunks relevantes
+↓
+Monta prompt final
+↓
+Chama OpenAI/Azure OpenAI
+↓
+Salva resposta
+↓
+Salva agent_execution
+↓
+Retorna resposta ao frontend
+```
+
+---
+
+# 11. Componentes Visuais Obrigatórios
+
+Criar os seguintes componentes:
+
+```text
+OrbCore
+HologramCard
+ThinkingAnimation
+MemoryPanel
+ContextPanel
+AgentPanel
+CommandConsole
+KnowledgeRadar
+NeuralPulse
+```
+
+Estados do OrbCore:
+
+```text
+Idle
+Listening
+Thinking
+Searching
+Answering
+Learning
+Error
+```
+
+---
+
+# 12. Rotas Obrigatórias
+
+```text
+/login
+/dashboard
+/chat
+/memories
+/instructions
+/documents
+/projects
+/agents
+/settings
+```
+
+---
+
+# 13. Critérios Gerais de Aceite
+
+O MVP será considerado pronto quando:
+
+* login funcionar;
+* dashboard carregar;
+* chat responder com IA;
+* histórico for salvo;
+* orientações forem usadas no prompt;
+* memórias forem usadas no prompt;
+* documentos puderem ser enviados;
+* documentos forem vetorizados;
+* busca vetorial funcionar;
+* painel contextual mostrar fontes usadas;
+* layout estiver responsivo;
+* PWA puder ser instalado no celular;
+* Supabase estiver sendo usado via `.env.local`;
+* progresso estiver documentado por US.
+
+---
+
+# 14. Orientação Final ao Dev
+
+Executar o desenvolvimento por User Story.
+
+Não interromper o fluxo para perguntar “sim ou não” a cada etapa técnica.
+
+Tomar decisões técnicas coerentes com este documento.
+
+Quando houver erro, corrigir e registrar no progresso.
+
+Quando concluir uma US, marcar com OK.
+
+Quando faltar variável no `.env.local`, criar tratamento de erro claro e seguir com o que for possível.
+
+Não expor secrets no frontend.
+
+Usar `NEXT_PUBLIC_` apenas para variáveis públicas.
+
+Usar `SUPABASE_SERVICE_ROLE_KEY` somente no backend.
+
+Priorizar segurança, organização e funcionamento real.
+
+---
+
+# 15. Resultado Esperado
+
+Ao final do MVP, Christian deverá conseguir:
+
+```text
+1. Entrar no KAIROS.
+2. Conversar com o agente.
+3. Ensinar orientações.
+4. Criar memórias.
+5. Enviar documentos.
+6. Fazer perguntas com base no conhecimento salvo.
+7. Ver o que o agente usou para responder.
+8. Acessar pelo celular como PWA.
+```
+
+# Fim do Documento

@@ -1,0 +1,254 @@
+# KAIROS AGENT
+
+## Solicitação ao Dev - Implementação da Base de Conhecimento Mestre
+
+## Objetivo
+
+Implementar no KAIROS AGENT os dois documentos de base de conhecimento já definidos:
+
+1. Metodologia de Construção da Base de Conhecimento Completa.
+2. Taxonomia Mestre da Base de Conhecimento.
+
+Esses documentos devem deixar de ser apenas referência e passar a orientar telas, cadastros, categorias e estrutura inicial do sistema.
+
+---
+
+# Entregas Esperadas
+
+## 1. Criar documentação oficial no projeto
+
+Adicionar os arquivos:
+
+```text
+docs/knowledge-base/01-metodologia-base-conhecimento.md
+docs/knowledge-base/02-taxonomia-mestre-conhecimento.md
+```
+
+---
+
+## 2. Criar categorias padrão
+
+Implementar categorias iniciais para:
+
+```text
+Orientações
+Memórias
+Documentos
+Projetos
+Especialistas
+```
+
+Essas categorias devem aparecer nas telas de cadastro.
+
+---
+
+## 3. Ajustar tela de Orientações
+
+Adicionar categorias como:
+
+```text
+Perfil Profissional
+Projetos
+Tecnologia
+Comunicação
+Decisão
+Gestão
+IA
+Pessoal
+EAC
+```
+
+---
+
+## 4. Ajustar tela de Memórias
+
+Adicionar tipos padrão:
+
+```text
+PERSONAL
+PROFESSIONAL
+TECHNICAL
+PROCESS
+DECISION
+PREFERENCE
+PROJECT
+CLIENT
+EAC
+```
+
+---
+
+## 5. Ajustar tela de Documentos
+
+Adicionar classificação documental:
+
+```text
+Projetos
+Negócios
+IA
+Pessoal
+EAC
+Tecnologia
+Contratos
+Atas
+Arquiteturas
+Estudos
+```
+
+---
+
+## 6. Criar seeds iniciais
+
+Criar seed para inserir categorias padrão no banco.
+
+Sugestão:
+
+```text
+database/seeds/001_knowledge_taxonomy_seed.sql
+```
+
+---
+
+## 7. Criar checklist de maturidade
+
+Criar uma tela ou bloco no dashboard com níveis:
+
+```text
+Nível 1
+50 memórias
+20 orientações
+20 documentos
+
+Nível 2
+200 memórias
+100 orientações
+100 documentos
+20 projetos
+
+Nível 3
+500 memórias
+200 orientações
+300 documentos
+50 projetos
+
+Nível 4
+1000 memórias
+300 orientações
+500 documentos
+100 projetos
+```
+
+---
+
+## 8. Criar progresso da base
+
+No Dashboard, mostrar:
+
+```text
+Total de memórias
+Total de orientações
+Total de documentos
+Total de projetos
+Nível atual da base
+Próximo nível
+```
+
+---
+
+# User Stories
+
+## US036 - Documentar base de conhecimento
+
+Criar os documentos oficiais dentro do projeto.
+
+Resultado:
+
+```text
+OK - US036
+```
+
+---
+
+## US037 - Implementar categorias padrão
+
+Criar categorias e tipos fixos ou parametrizáveis para orientar os cadastros.
+
+Resultado:
+
+```text
+OK - US037
+```
+
+---
+
+## US038 - Ajustar formulários
+
+Atualizar os formulários de Memórias, Orientações e Documentos para usar as categorias da taxonomia.
+
+Resultado:
+
+```text
+OK - US038
+```
+
+---
+
+## US039 - Criar seed da taxonomia
+
+Criar script inicial para popular categorias padrão.
+
+Resultado:
+
+```text
+OK - US039
+```
+
+---
+
+## US040 - Criar indicador de maturidade
+
+Criar indicador visual no Dashboard mostrando evolução da base de conhecimento.
+
+Resultado:
+
+```text
+OK - US040
+```
+
+---
+
+# Regra de execução
+
+O dev pode implementar sem solicitar confirmação etapa por etapa.
+
+Usar as informações já existentes no `.env.local`.
+
+Registrar progresso em:
+
+```text
+docs/progresso-desenvolvimento.md
+```
+
+Formato:
+
+```text
+OK - US036 - Documentação oficial da base criada
+OK - US037 - Categorias padrão implementadas
+OK - US038 - Formulários ajustados
+OK - US039 - Seed da taxonomia criada
+OK - US040 - Indicador de maturidade criado
+```
+
+---
+
+# Critério de aceite
+
+A implementação será aceita quando:
+
+```text
+1. Os documentos estiverem no repositório.
+2. As categorias aparecerem nos formulários.
+3. Memórias, orientações e documentos puderem ser classificados.
+4. O dashboard mostrar evolução da base.
+5. O KAIROS tiver estrutura clara para crescer como segundo cérebro.
+```

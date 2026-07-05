@@ -1,0 +1,545 @@
+# KAIROS AGENT
+
+## Especificação Técnica Frontend - Next.js + Shadcn + Holographic UI v1.0
+
+**Versão:** 1.0
+**Data:** 04/07/2026
+
+---
+
+# Objetivo
+
+Desenvolver uma interface futurista premium para o KAIROS AGENT, inspirada na combinação entre:
+
+* Cortana (Halo);
+* JARVIS (Marvel);
+* sistemas holográficos;
+* centros de comando de IA.
+
+A interface deve transmitir:
+
+```text id="d9c7p1"
+Inteligência
+Presença
+Memória
+Confiança
+Tecnologia
+Elegância
+```
+
+---
+
+# Stack Frontend
+
+```text id="a2m7k8"
+Next.js 15
+React 19
+TypeScript
+Tailwind CSS
+Shadcn/UI
+Framer Motion
+Lucide Icons
+TanStack Query
+Zustand
+```
+
+---
+
+# Dependências
+
+```bash id="v6k3r9"
+npm install
+
+@supabase/supabase-js
+@tanstack/react-query
+zustand
+framer-motion
+lucide-react
+class-variance-authority
+tailwind-merge
+clsx
+react-hook-form
+zod
+sonner
+date-fns
+react-dropzone
+react-markdown
+```
+
+---
+
+# Estrutura do Frontend
+
+```text id="b8n4w2"
+src/
+
+app/
+components/
+features/
+hooks/
+services/
+stores/
+types/
+utils/
+lib/
+styles/
+```
+
+---
+
+# Estrutura de Features
+
+```text id="h5q8m7"
+features/
+
+auth/
+chat/
+memory/
+documents/
+instructions/
+projects/
+dashboard/
+agents/
+settings/
+```
+
+---
+
+# Componentes Base
+
+```text id="n7v4c1"
+Button
+Card
+Input
+Textarea
+Modal
+Dialog
+Drawer
+Toast
+Tooltip
+Dropdown
+Tabs
+Accordion
+```
+
+---
+
+# Componentes Exclusivos KAIROS
+
+```text id="j2m9r5"
+OrbCore
+HologramCard
+ThinkingAnimation
+MemoryPanel
+AgentPanel
+ContextPanel
+VoiceVisualizer
+CommandConsole
+KnowledgeRadar
+NeuralPulse
+```
+
+---
+
+# Paleta de Cores
+
+## Background
+
+```css id="u8f1p6"
+--background-primary: #050A18;
+--background-secondary: #0B1226;
+--background-card: #111827;
+```
+
+---
+
+## Holográfico
+
+```css id="q4t7y3"
+--cyan: #00E5FF;
+--blue: #1B6EFF;
+--light-blue: #00AEEF;
+```
+
+---
+
+## Status
+
+```css id="r6g2k9"
+--success: #22C55E;
+--warning: #F97316;
+--danger: #EF4444;
+```
+
+---
+
+# Tipografia
+
+## Fonte principal
+
+```text id="m1s8v4"
+Inter
+```
+
+---
+
+## Fonte técnica
+
+```text id="p9w6c2"
+JetBrains Mono
+```
+
+---
+
+## Fonte futurista
+
+```text id="x3e5h7"
+Orbitron
+```
+
+---
+
+# Layout Principal
+
+```text id="k7a2q1"
+┌──────────┬──────────────────┬──────────┐
+│ Sidebar  │ Main Content     │ Context  │
+│          │                  │          │
+└──────────┴──────────────────┴──────────┘
+```
+
+---
+
+# Sidebar
+
+Largura:
+
+```css id="t4u9n6"
+280px
+```
+
+Itens:
+
+```text id="f5g1d8"
+Dashboard
+Chat
+Memórias
+Orientações
+Documentos
+Projetos
+Especialistas
+Configurações
+```
+
+---
+
+# Dashboard
+
+Widgets:
+
+```text id="w8o3m5"
+Conversas
+Memórias
+Projetos
+Documentos
+Atividades
+Insights
+Recomendações
+```
+
+---
+
+# Chat
+
+Estrutura:
+
+```text id="c7p2k4"
+Sidebar histórico
+Chat principal
+Painel contexto
+```
+
+---
+
+# Painel Contextual
+
+Mostrar:
+
+```text id="n5h9u1"
+Memórias utilizadas
+Documentos utilizados
+Orientações aplicadas
+Agentes acionados
+Tokens utilizados
+Confiança da resposta
+```
+
+---
+
+# Orb Core
+
+Componente principal da IA.
+
+Estados:
+
+```text id="e2f6b8"
+Idle
+Listening
+Thinking
+Searching
+Answering
+Learning
+Error
+```
+
+---
+
+## Idle
+
+```text id="j1r4t7"
+Pulso lento
+Rotação suave
+Brilho baixo
+```
+
+---
+
+## Thinking
+
+```text id="o9v2q5"
+Pulso rápido
+Anéis orbitais
+Partículas
+Brilho intenso
+```
+
+---
+
+## Learning
+
+```text id="l6x8c3"
+Expansão
+Pulsação
+Feedback visual
+```
+
+---
+
+# Motion System
+
+Biblioteca:
+
+```text id="y3m7w1"
+Framer Motion
+```
+
+---
+
+## Animações
+
+```text id="g5b2n8"
+fade
+slide
+glow
+pulse
+rotate
+scale
+orbit
+particle
+```
+
+---
+
+# Hologram Card
+
+Características:
+
+```css id="u7q4k6"
+backdrop-filter: blur(16px);
+border-opacity: 15%;
+glass effect;
+inner glow;
+outer glow;
+```
+
+---
+
+# Memory Card
+
+Informações:
+
+```text id="r8c1p4"
+Título
+Categoria
+Importância
+Último uso
+Origem
+Status
+```
+
+---
+
+# Project Card
+
+Informações:
+
+```text id="h2n9f5"
+Cliente
+Projeto
+Status
+Risco
+Próxima ação
+```
+
+---
+
+# Document Viewer
+
+Abas:
+
+```text id="b4t6v8"
+Resumo
+Documento
+Chunks
+Entidades
+Relacionamentos
+```
+
+---
+
+# Especialistas
+
+Visualização:
+
+```text id="m8q1x3"
+KAIROS MASTER
+
+○ PM AGENT
+○ TECH AGENT
+○ FINANCE AGENT
+○ BUSINESS AGENT
+○ PERSONAL AGENT
+○ EAC AGENT
+```
+
+---
+
+# Responsividade
+
+## Desktop
+
+```text id="p6r3k9"
+1920px+
+```
+
+Layout completo.
+
+---
+
+## Tablet
+
+```text id="d7n5h1"
+768px+
+```
+
+Sidebar recolhível.
+
+---
+
+## Mobile
+
+```text id="z4v8m2"
+390px+
+```
+
+Modo PWA.
+
+---
+
+# Progressive Web App
+
+Funcionalidades:
+
+```text id="s9k2w7"
+Instalável
+Offline cache
+Push notification
+Sincronização
+Atualização automática
+```
+
+---
+
+# Estrutura Inicial das Rotas
+
+```text id="q1m7v8"
+/login
+
+/dashboard
+
+/chat
+
+/memory
+
+/instructions
+
+/documents
+
+/projects
+
+/agents
+
+/settings
+```
+
+---
+
+# Arquivo de Configuração
+
+```bash id="t8n3p6"
+.env.local
+```
+
+```bash id="v2k5r1"
+NEXT_PUBLIC_APP_NAME=Kairos Agent
+
+NEXT_PUBLIC_SUPABASE_URL=
+
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+
+SUPABASE_SERVICE_ROLE_KEY=
+
+DATABASE_URL=
+
+OPENAI_API_KEY=
+
+OPENAI_MODEL=gpt-5
+
+OPENAI_EMBEDDING_MODEL=text-embedding-3-large
+
+VECTOR_DIMENSIONS=3072
+
+CHUNK_SIZE=1000
+
+CHUNK_OVERLAP=200
+
+TOP_K_RESULTS=10
+```
+
+---
+
+# Objetivo Visual Final
+
+O usuário deve sentir que está utilizando:
+
+```text id="u5p8n4"
+40% Cortana
+40% JARVIS
+20% identidade própria do KAIROS
+```
+
+E a sensação permanente deve ser:
+
+```text id="w3c9f2"
+"Existe uma inteligência trabalhando comigo e para mim."
+```

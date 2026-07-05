@@ -1,0 +1,351 @@
+# KAIROS AGENT
+
+## Documento de Visão e Arquitetura - MVP v1.0
+
+**Versão:** 1.0
+**Data:** 04/07/2026
+**Responsável:** Christian Moura
+
+---
+
+# 1. Objetivo do Projeto
+
+Desenvolver um agente pessoal inteligente, acessível via Web e dispositivos móveis, capaz de ser treinado continuamente pelo próprio usuário através de orientações, documentos, histórico de conversas e memórias estruturadas.
+
+O objetivo principal do KAIROS AGENT é funcionar como um parceiro pessoal e profissional, capaz de aprender, consultar conhecimento previamente ensinado e responder de forma contextualizada.
+
+---
+
+# 2. Objetivos do MVP
+
+A primeira versão deverá permitir:
+
+* Autenticação de usuários.
+* Conversação via chat.
+* Cadastro de orientações para treinamento do agente.
+* Upload de documentos.
+* Consulta de documentos enviados.
+* Armazenamento de histórico.
+* Armazenamento de memória estruturada.
+* Respostas utilizando contexto previamente ensinado.
+
+---
+
+# 3. Escopo Inicial
+
+## Incluído
+
+### Autenticação
+
+* Login por e-mail e senha.
+* Recuperação de senha.
+* Perfil do usuário.
+
+### Chat
+
+* Interface semelhante ao ChatGPT.
+* Histórico de conversas.
+* Persistência completa das mensagens.
+
+### Orientações
+
+* Cadastro manual de conhecimento.
+* Edição de conhecimento.
+* Exclusão de conhecimento.
+* Ativação e desativação de regras.
+
+### Documentos
+
+* Upload de arquivos.
+* Indexação automática.
+* Consulta contextual.
+
+### Memória
+
+* Armazenamento estruturado.
+* Classificação por categoria.
+* Priorização.
+
+---
+
+## Não incluído no MVP
+
+* WhatsApp.
+* Voz.
+* Agentes autônomos.
+* Agenda.
+* Gmail.
+* Teams.
+* Azure DevOps.
+* Automações.
+* Execução de tarefas externas.
+
+---
+
+# 4. Arquitetura Inicial
+
+```text
+Usuário
+    ↓
+Frontend Web/PWA
+    ↓
+API Backend
+    ↓
+Orquestrador do Agente
+    ↓
+Banco Relacional
+    ↓
+Banco Vetorial
+    ↓
+Modelo de IA
+```
+
+---
+
+# 5. Stack Tecnológica
+
+## Frontend
+
+```text
+Next.js
+TypeScript
+TailwindCSS
+Shadcn/UI
+PWA
+```
+
+## Backend
+
+```text
+Next.js API
+Node.js
+TypeScript
+```
+
+## Banco
+
+```text
+Supabase PostgreSQL
+pgvector
+```
+
+## Armazenamento
+
+```text
+Supabase Storage
+```
+
+## Inteligência Artificial
+
+```text
+OpenAI API
+ou
+Azure OpenAI
+```
+
+---
+
+# 6. Estrutura Inicial do Banco
+
+## users
+
+| Campo      | Tipo      |
+| ---------- | --------- |
+| id         | uuid      |
+| nome       | text      |
+| email      | text      |
+| created_at | timestamp |
+
+---
+
+## conversations
+
+| Campo      | Tipo      |
+| ---------- | --------- |
+| id         | uuid      |
+| user_id    | uuid      |
+| titulo     | text      |
+| created_at | timestamp |
+
+---
+
+## messages
+
+| Campo           | Tipo      |
+| --------------- | --------- |
+| id              | uuid      |
+| conversation_id | uuid      |
+| role            | text      |
+| content         | text      |
+| created_at      | timestamp |
+
+---
+
+## instructions
+
+| Campo      | Tipo      |
+| ---------- | --------- |
+| id         | uuid      |
+| user_id    | uuid      |
+| titulo     | text      |
+| categoria  | text      |
+| conteudo   | text      |
+| prioridade | integer   |
+| ativo      | boolean   |
+| created_at | timestamp |
+
+---
+
+## memories
+
+| Campo       | Tipo      |
+| ----------- | --------- |
+| id          | uuid      |
+| user_id     | uuid      |
+| tipo        | text      |
+| titulo      | text      |
+| conteudo    | text      |
+| importancia | integer   |
+| ativo       | boolean   |
+| created_at  | timestamp |
+
+---
+
+## documents
+
+| Campo        | Tipo      |
+| ------------ | --------- |
+| id           | uuid      |
+| user_id      | uuid      |
+| nome_arquivo | text      |
+| url          | text      |
+| status       | text      |
+| created_at   | timestamp |
+
+---
+
+## document_chunks
+
+| Campo       | Tipo   |
+| ----------- | ------ |
+| id          | uuid   |
+| document_id | uuid   |
+| conteudo    | text   |
+| embedding   | vector |
+| metadata    | jsonb  |
+
+---
+
+# 7. Fluxo do Agente
+
+```text
+Pergunta do usuário
+        ↓
+Buscar orientações
+        ↓
+Buscar memórias
+        ↓
+Buscar documentos
+        ↓
+Montar contexto
+        ↓
+Enviar para IA
+        ↓
+Receber resposta
+        ↓
+Salvar histórico
+```
+
+---
+
+# 8. Funcionalidades da Primeira Sprint
+
+## Sprint 1
+
+### Infraestrutura
+
+* Criar repositório Git.
+* Criar projeto Supabase.
+* Criar projeto Next.js.
+* Configurar autenticação.
+
+### Banco
+
+* Criar tabelas iniciais.
+* Criar migrations.
+* Configurar pgvector.
+
+### Frontend
+
+* Tela login.
+* Dashboard inicial.
+* Tela de chat.
+
+### Backend
+
+* API de conversação.
+* Persistência de mensagens.
+* Integração com OpenAI.
+
+---
+
+# 9. Estrutura Inicial de Pastas
+
+```text
+kairos-agent/
+
+src/
+ ├── app/
+ ├── components/
+ ├── services/
+ ├── hooks/
+ ├── lib/
+ ├── agents/
+ ├── rag/
+ ├── memory/
+ ├── prompts/
+ └── types/
+
+database/
+ ├── migrations/
+ └── seeds/
+
+docs/
+ ├── arquitetura/
+ ├── prompts/
+ └── requisitos/
+```
+
+---
+
+# 10. Roadmap Futuro
+
+## Fase 2
+
+* RAG avançado.
+* Aprendizado supervisionado.
+* Memória persistente.
+
+## Fase 3
+
+* WhatsApp.
+* Gmail.
+* Agenda.
+
+## Fase 4
+
+* Voz.
+* Agentes especialistas.
+* Execução de tarefas.
+
+## Fase 5
+
+* Multiagentes.
+* Automações.
+* Assistente pessoal completo.
+
+---
+
+# Missão do Projeto
+
+> Construir um agente pessoal treinável, capaz de aprender continuamente com Christian, preservando conhecimento, contexto e decisões ao longo do tempo.

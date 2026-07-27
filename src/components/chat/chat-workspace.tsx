@@ -60,6 +60,7 @@ export function ChatWorkspace({
   const [voiceTranscript, setVoiceTranscript] = useState("");
   const [isPending, startTransition] = useTransition();
   const [renamingId, setRenamingId] = useState<string | null>(null);
+  const [selectedAgentId, setSelectedAgentId] = useState("");
 
   const submitMessage = useCallback(
     async (payload: { message: string; channel: "text" | "voice"; transcript?: string }) => {
@@ -86,6 +87,7 @@ export function ChatWorkspace({
           channel: payload.channel,
           transcript: payload.transcript,
           projectId,
+          agentId: selectedAgentId || undefined,
         }),
       });
 
@@ -114,7 +116,7 @@ export function ChatWorkspace({
       router.refresh();
       return body.answer as string;
     },
-    [conversationId, projectId, router],
+    [conversationId, projectId, router, selectedAgentId],
   );
 
   const voice = useVoiceSession({
@@ -262,6 +264,12 @@ export function ChatWorkspace({
               </div>
             </div>
             <div className="flex flex-wrap gap-3">
+              {agents.length > 0 ? (
+                <select value={selectedAgentId} onChange={(event) => setSelectedAgentId(event.target.value)} className="rounded-xl border border-white/10 bg-slate-950 px-3 text-sm text-slate-100">
+                  <option value="">KAIROS geral</option>
+                  {agents.filter((agent) => agent.ativo).map((agent) => <option key={agent.id} value={agent.id}>{agent.nome}</option>)}
+                </select>
+              ) : null}
               <Button
                 variant={voice.listening ? "danger" : "secondary"}
                 onClick={() => (voice.listening ? voice.stop() : voice.start())}

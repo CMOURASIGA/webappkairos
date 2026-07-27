@@ -24,6 +24,7 @@ export interface Conversation {
   profile_id: string;
   titulo: string | null;
   status: ConversationStatus;
+  project_id?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -48,6 +49,7 @@ export interface Instruction {
   conteudo: string;
   prioridade: number;
   ativo: boolean;
+  project_id?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -61,6 +63,7 @@ export interface Memory {
   importancia: number;
   origem?: string | null;
   ativo: boolean;
+  project_id?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -75,6 +78,7 @@ export interface DocumentRecord {
   storage_path?: string | null;
   status: DocumentStatus;
   extraido_texto?: string | null;
+  project_id?: string | null;
   created_at: string;
 }
 
@@ -85,6 +89,9 @@ export interface Project {
   cliente?: string | null;
   descricao?: string | null;
   status: string;
+  objetivo?: string | null;
+  contexto?: string | null;
+  prompt_base?: string | null;
   created_at: string;
   updated_at: string;
 }

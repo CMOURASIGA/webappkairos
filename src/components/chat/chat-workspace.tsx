@@ -35,6 +35,7 @@ export function ChatWorkspace({
   memories,
   agents,
   activeConversationId,
+  projectId,
 }: {
   conversations: Conversation[];
   initialMessages: Message[];
@@ -49,6 +50,7 @@ export function ChatWorkspace({
   memories: Array<{ id: string; titulo?: string | null; conteudo: string }>;
   agents: AgentProfile[];
   activeConversationId?: string;
+  projectId?: string;
 }) {
   const router = useRouter();
   const [message, setMessage] = useState("");
@@ -83,6 +85,7 @@ export function ChatWorkspace({
           conversationId,
           channel: payload.channel,
           transcript: payload.transcript,
+          projectId,
         }),
       });
 
@@ -111,7 +114,7 @@ export function ChatWorkspace({
       router.refresh();
       return body.answer as string;
     },
-    [conversationId, router],
+    [conversationId, projectId, router],
   );
 
   const voice = useVoiceSession({

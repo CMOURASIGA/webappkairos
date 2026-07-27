@@ -75,6 +75,7 @@ export async function uploadAndProcessDocument(
   profileId: string,
   file: File,
   categoria?: string,
+  projectId?: string,
 ) {
   const admin = getSupabaseAdminClient();
   const content = await extractTextFromFile(file);
@@ -93,6 +94,7 @@ export async function uploadAndProcessDocument(
     .from("documents")
     .insert({
       profile_id: profileId,
+      project_id: projectId ?? null,
       nome_arquivo: file.name,
       categoria: categoria ?? null,
       mime_type: file.type,

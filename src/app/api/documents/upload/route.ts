@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
     }
 
     const categoria = String(formData.get("categoria") ?? "").trim() || DOCUMENT_CATEGORIES[0].value;
+    const projectId = String(formData.get("projectId") ?? "").trim() || undefined;
 
     if (file.size > env.MAX_UPLOAD_SIZE) {
       throw new Error("Arquivo acima do limite permitido.");
@@ -22,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     const user = await getAuthenticatedUser();
     const profile = await ensureProfile(user);
-    const document = await uploadAndProcessDocument(profile.id, file, categoria);
+    const document = await uploadAndProcessDocument(profile.id, file, categoria, projectId);
     return NextResponse.json({ document });
   } catch (error) {
     return NextResponse.json(

@@ -6,7 +6,7 @@ import { env } from "@/lib/env";
 const publicPaths = ["/login", "/reset-password", "/auth/callback"];
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({ request });
+  const response = NextResponse.next({ request });
 
   const supabase = createServerClient(
     env.NEXT_PUBLIC_SUPABASE_URL ?? "",

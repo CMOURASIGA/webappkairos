@@ -5,7 +5,7 @@ import { loadChatPage } from "@/services/server-loaders";
 export default async function ChatPage({
   searchParams,
 }: {
-  searchParams: Promise<{ conversation?: string }>;
+  searchParams: Promise<{ conversation?: string; project?: string }>;
 }) {
   const params = await searchParams;
   const { conversations, messages, memories, instructions, documents, agents, activeConversation } =
@@ -31,6 +31,7 @@ export default async function ChatPage({
         memories={memories}
         agents={agents}
         activeConversationId={activeConversation?.id ?? conversations[0]?.id}
+        projectId={params.project}
       />
     </div>
   );

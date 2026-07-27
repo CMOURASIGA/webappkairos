@@ -32,6 +32,9 @@ async function ensureConversation(profileId: string, conversationId?: string, pr
       .maybeSingle();
 
     if (data) {
+      if ((data.project_id ?? null) !== (projectId ?? null)) {
+        throw new Error("A conversa selecionada nao pertence ao projeto atual.");
+      }
       return data as Conversation;
     }
   }

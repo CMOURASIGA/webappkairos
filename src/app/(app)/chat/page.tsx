@@ -9,7 +9,7 @@ export default async function ChatPage({
 }) {
   const params = await searchParams;
   const { conversations, messages, memories, instructions, documents, agents, activeConversation } =
-    await loadChatPage(params.conversation);
+    await loadChatPage(params.conversation, params.project);
 
   return (
     <div className="space-y-6">

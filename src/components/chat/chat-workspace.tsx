@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import {
   Bot,
   Mic,
@@ -61,6 +61,12 @@ export function ChatWorkspace({
   const [isPending, startTransition] = useTransition();
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [selectedAgentId, setSelectedAgentId] = useState("");
+
+  useEffect(() => {
+    setConversationId(activeConversationId);
+    setMessages(initialMessages);
+    setContext(initialContext);
+  }, [activeConversationId, initialContext, initialMessages, projectId]);
 
   const submitMessage = useCallback(
     async (payload: { message: string; channel: "text" | "voice"; transcript?: string }) => {
@@ -180,7 +186,7 @@ export function ChatWorkspace({
       toast.success("Conversa removida.");
       setMessages([]);
       setConversationId(undefined);
-      router.push("/chat");
+      router.push(projectId ? `/chat?project=${projectId}` : "/chat");
       router.refresh();
     });
   };
@@ -207,7 +213,11 @@ export function ChatWorkspace({
                 className="w-full rounded-2xl border border-white/8 bg-white/4 p-4 text-left transition hover:border-cyan-300/20 hover:bg-white/7"
                 onClick={() => {
                   setConversationId(conversation.id);
-                  router.push(`/chat?conversation=${conversation.id}`);
+                  router.push(
+                    projectId
+                      ? `/chat?project=${projectId}&conversation=${conversation.id}`
+                      : `/chat?conversation=${conversation.id}`,
+                  );
                 }}
               >
                 <div className="flex items-start justify-between gap-2">

@@ -70,8 +70,24 @@ export async function getDashboardBundle(profile: Profile) {
   };
 }
 
-export async function getConversations(profileId: string) {
-  return selectByProfile<Conversation>("conversations", profileId);
+export async function getConversations(profileId: string, projectId?: string) {
+  const admin = getSupabaseAdminClient();
+  let query = admin
+    .from("conversations")
+    .select("*")
+    .eq("profile_id", profileId)
+    .order("updated_at", { ascending: false });
+
+  if (projectId) {
+    query = query.eq("project_id", projectId);
+  }
+
+  const { data, error } = await query;
+  if (error) {
+    throw new Error(normalizeError(error) ?? "Erro desconhecido");
+  }
+
+  return (data ?? []) as Conversation[];
 }
 
 export async function getConversation(profileId: string, conversationId: string) {

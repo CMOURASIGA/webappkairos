@@ -27,18 +27,22 @@ export async function loadDashboardPage() {
   return { profile, ...bundle };
 }
 
-export async function loadChatPage(conversationId?: string) {
+export async function loadChatPage(conversationId?: string, projectId?: string) {
   const { profile } = await loadAppContext();
   const [conversations, memories, instructions, documents, agents] = await Promise.all([
-    getConversations(profile.id),
+    getConversations(profile.id, projectId),
     getMemories(profile.id),
     getInstructions(profile.id),
     getDocuments(profile.id),
     getAgents(profile.id),
   ]);
 
-  const selectedConversation =
+  const requestedConversation =
     conversationId ? await getConversation(profile.id, conversationId) : null;
+  const selectedConversation =
+    requestedConversation && (!projectId || requestedConversation.project_id === projectId)
+      ? requestedConversation
+      : null;
   const activeConversation = selectedConversation ?? conversations[0];
   const messages = activeConversation
     ? await getConversationMessages(activeConversation.id)

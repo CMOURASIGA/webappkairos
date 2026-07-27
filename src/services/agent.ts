@@ -97,10 +97,10 @@ async function getConversationHistory(conversationId: string) {
   return ((data ?? []) as Message[]).reverse();
 }
 
-async function getRelevantDocuments(profileId: string, message: string) {
+async function getRelevantDocuments(profileId: string, message: string, projectId?: string) {
   const admin = getSupabaseAdminClient();
 
-  if (hasOpenAI) {
+  if (hasOpenAI && !projectId) {
     const queryEmbedding = await createEmbedding(message);
 
     if (queryEmbedding) {
@@ -116,7 +116,7 @@ async function getRelevantDocuments(profileId: string, message: string) {
 
   const { data } = await admin
     .from("documents")
-    .select("id, nome_arquivo, extraido_texto")
+    .select("id, nome_arquivo, extraido_texto, project_id")
     .eq("profile_id", profileId)
     .order("created_at", { ascending: false })
     .limit(10);
@@ -127,6 +127,7 @@ async function getRelevantDocuments(profileId: string, message: string) {
     .filter((term) => term.length > 3);
 
   return (data ?? [])
+    .filter((document: { project_id?: string | null }) => !projectId || document.project_id === projectId)
     .map((document: { nome_arquivo: string; extraido_texto: string | null }) => ({
       document_name: document.nome_arquivo as string,
       content: String(document.extraido_texto ?? "").slice(0, 1200),
@@ -230,7 +231,7 @@ export async function runAgent(input: RunAgentInput) {
   const [instructions, memories, documents, history, projectResult, specialistResult] = await Promise.all([
     getRelevantInstructions(input.profile.id),
     getRelevantMemories(input.profile.id),
-    getRelevantDocuments(input.profile.id, input.message),
+    getRelevantDocuments(input.profile.id, input.message, input.projectId),
     getConversationHistory(conversation.id),
     input.projectId
       ? admin.from("projects").select("*").eq("id", input.projectId).eq("profile_id", input.profile.id).maybeSingle()

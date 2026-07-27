@@ -43,11 +43,14 @@ export default async function ProjectsPage() {
 
       <div className="grid gap-3 md:grid-cols-2">
         {projects.map((project) => (
-          <Link key={project.id} href={`/chat?project=${project.id}`} className="rounded-2xl border border-cyan-300/20 bg-cyan-400/10 p-5 transition hover:border-cyan-300/50">
+          <div key={project.id} className="rounded-2xl border border-cyan-300/20 bg-cyan-400/10 p-5">
+            <Link href={`/chat?project=${project.id}`} className="block transition hover:text-cyan-100">
             <p className="text-xs uppercase tracking-[0.2em] text-cyan-200">Notebook do projeto</p>
             <h3 className="mt-2 text-lg font-semibold text-white">{project.nome}</h3>
-            <p className="mt-2 text-sm text-slate-300">Abrir conversa, documentos e contexto exclusivo.</p>
-          </Link>
+            <p className="mt-2 text-sm text-slate-300">Abrir conversa e contexto exclusivo.</p>
+            </Link>
+            <Link href={`/documents?project=${project.id}`} className="mt-4 inline-block text-sm font-medium text-cyan-200 hover:text-white">Enviar documentos do projeto</Link>
+          </div>
         ))}
       </div>
     </div>

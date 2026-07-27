@@ -15,9 +15,11 @@ import { formatDate } from "@/lib/utils";
 export function DocumentManager({
   documents,
   categories = DOCUMENT_CATEGORIES,
+  projectId,
 }: {
   documents: DocumentRecord[];
   categories?: TaxonomyOption[];
+  projectId?: string;
 }) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -34,6 +36,7 @@ export function DocumentManager({
     const formData = new FormData();
     formData.append("file", files[0]);
     formData.append("categoria", category);
+    if (projectId) formData.append("projectId", projectId);
 
     const response = await fetch("/api/documents/upload", {
       method: "POST",

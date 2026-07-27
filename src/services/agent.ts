@@ -2,7 +2,7 @@ import { env, hasOpenAI } from "@/lib/env";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { KAIROS_SYSTEM_PROMPT } from "@/prompts/kairos-system-prompt";
 import { generateAgentResponse, createEmbedding } from "@/services/openai";
-import { AgentSettings, Conversation, Instruction, Memory, Message, Profile } from "@/types/domain";
+import { AgentProfile, AgentSettings, Conversation, Instruction, Memory, Message, Profile, Project } from "@/types/domain";
 
 interface RunAgentInput {
   profile: Profile;
@@ -10,6 +10,8 @@ interface RunAgentInput {
   conversationId?: string;
   channel?: "text" | "voice";
   transcript?: string;
+  projectId?: string;
+  agentId?: string;
 }
 
 interface RetrievedDocument {
@@ -18,7 +20,7 @@ interface RetrievedDocument {
   similarity?: number;
 }
 
-async function ensureConversation(profileId: string, conversationId?: string) {
+async function ensureConversation(profileId: string, conversationId?: string, projectId?: string) {
   const admin = getSupabaseAdminClient();
 
   if (conversationId) {
@@ -39,6 +41,7 @@ async function ensureConversation(profileId: string, conversationId?: string) {
     .from("conversations")
     .insert({
       profile_id: profileId,
+      project_id: projectId ?? null,
       titulo: title,
       status: "ACTIVE",
     })
@@ -145,6 +148,8 @@ function buildPrompt(input: {
   memories: Memory[];
   documents: RetrievedDocument[];
   history: Message[];
+  project?: Project | null;
+  specialist?: AgentProfile | null;
 }) {
   const instructionsText =
     input.instructions.map((item) => `- ${item.titulo}: ${item.conteudo}`).join("\n") ||
@@ -169,6 +174,12 @@ Configuracoes do agente:
 - personalidade: ${input.settings.personalidade || "Clara e objetiva"}
 - modelo chat: ${input.settings.modelo_chat || env.OPENAI_MODEL}
 - temperatura: ${input.settings.temperatura}
+
+Projeto ativo:
+${input.project ? `- nome: ${input.project.nome}\n- objetivo: ${input.project.objetivo || "Nao informado"}\n- contexto: ${input.project.contexto || input.project.descricao || "Nao informado"}\n- orientacao do projeto: ${input.project.prompt_base || "Nenhuma"}` : "- Nenhum projeto ativo"}
+
+Especialista ativo:
+${input.specialist ? `- ${input.specialist.nome}: ${input.specialist.prompt_base || input.specialist.descricao || "Sem prompt adicional"}` : "- KAIROS geral"}
 
 Orientacoes ativas:
 ${instructionsText}
@@ -197,7 +208,7 @@ Responda em portugues do Brasil com a estrutura:
 export async function runAgent(input: RunAgentInput) {
   const startedAt = Date.now();
   const admin = getSupabaseAdminClient();
-  const conversation = await ensureConversation(input.profile.id, input.conversationId);
+  const conversation = await ensureConversation(input.profile.id, input.conversationId, input.projectId);
   const settings = await admin
     .from("agent_settings")
     .select("*")
@@ -216,11 +227,17 @@ export async function runAgent(input: RunAgentInput) {
     },
   });
 
-  const [instructions, memories, documents, history] = await Promise.all([
+  const [instructions, memories, documents, history, projectResult, specialistResult] = await Promise.all([
     getRelevantInstructions(input.profile.id),
     getRelevantMemories(input.profile.id),
     getRelevantDocuments(input.profile.id, input.message),
     getConversationHistory(conversation.id),
+    input.projectId
+      ? admin.from("projects").select("*").eq("id", input.projectId).eq("profile_id", input.profile.id).maybeSingle()
+      : Promise.resolve({ data: null }),
+    input.agentId
+      ? admin.from("agents").select("*").eq("id", input.agentId).eq("profile_id", input.profile.id).eq("ativo", true).maybeSingle()
+      : Promise.resolve({ data: null }),
   ]);
 
   const prompt = buildPrompt({
@@ -239,6 +256,8 @@ export async function runAgent(input: RunAgentInput) {
     memories,
     documents,
     history,
+    project: projectResult.data as Project | null,
+    specialist: specialistResult.data as AgentProfile | null,
   });
 
   const response = await generateAgentResponse(prompt, KAIROS_SYSTEM_PROMPT);

@@ -9,6 +9,8 @@ const schema = z.object({
   conversationId: z.string().optional(),
   channel: z.enum(["text", "voice"]).default("text"),
   transcript: z.string().optional(),
+  projectId: z.string().uuid().optional(),
+  agentId: z.string().uuid().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -22,6 +24,8 @@ export async function POST(request: NextRequest) {
       conversationId: body.conversationId,
       channel: body.channel,
       transcript: body.transcript,
+      projectId: body.projectId,
+      agentId: body.agentId,
     });
 
     return NextResponse.json(result);

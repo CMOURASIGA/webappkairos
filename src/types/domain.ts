@@ -105,6 +105,9 @@ export interface ProjectTask {
   prioridade: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
   responsavel?: string | null;
   prazo?: string | null;
+  position?: number;
+  labels?: string[];
+  updated_at?: string;
   created_at: string;
 }
 

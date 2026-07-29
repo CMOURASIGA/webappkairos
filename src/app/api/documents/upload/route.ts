@@ -23,7 +23,9 @@ export async function POST(request: NextRequest) {
 
     const user = await getAuthenticatedUser();
     const profile = await ensureProfile(user);
-    const documents = await Promise.all(files.map((file) => uploadAndProcessDocument(profile.id, file, categoria, projectId)));
+    // Sequencial para evitar múltiplas chamadas simultâneas de embeddings na função serverless.
+    const documents: Awaited<ReturnType<typeof uploadAndProcessDocument>>[] = [];
+    for (const file of files) documents.push(await uploadAndProcessDocument(profile.id, file, categoria, projectId));
     return NextResponse.json({ document: documents[0], documents });
   } catch (error) {
     return NextResponse.json(

@@ -12,6 +12,9 @@ import {
   Message,
   Profile,
   Project,
+  ProjectDecision,
+  ProjectRisk,
+  ProjectTask,
 } from "@/types/domain";
 
 type EntityTable = "instructions" | "memories" | "projects" | "agents";
@@ -135,6 +138,25 @@ export async function getDocuments(profileId: string) {
 
 export async function getProjects(profileId: string) {
   return selectByProfile<Project>("projects", profileId);
+}
+
+export async function getProject(profileId: string, projectId: string) {
+  const admin = getSupabaseAdminClient();
+  const { data, error } = await admin.from("projects").select("*").eq("id", projectId).eq("profile_id", profileId).maybeSingle();
+  if (error) throw new Error(normalizeError(error) ?? "Erro ao carregar projeto");
+  return (data as Project | null) ?? null;
+}
+
+export async function getProjectPmo(profileId: string, projectId: string) {
+  const admin = getSupabaseAdminClient();
+  const [tasks, decisions, risks] = await Promise.all([
+    admin.from("tasks").select("*").eq("profile_id", profileId).eq("project_id", projectId).order("created_at", { ascending: false }),
+    admin.from("decisions").select("*").eq("profile_id", profileId).eq("project_id", projectId).order("created_at", { ascending: false }),
+    admin.from("risks").select("*").eq("profile_id", profileId).eq("project_id", projectId).order("created_at", { ascending: false }),
+  ]);
+  const error = tasks.error || decisions.error || risks.error;
+  if (error) throw new Error(normalizeError(error) ?? "Erro ao carregar controle do projeto");
+  return { tasks: (tasks.data ?? []) as ProjectTask[], decisions: (decisions.data ?? []) as ProjectDecision[], risks: (risks.data ?? []) as ProjectRisk[] };
 }
 
 export async function getAgents(profileId: string) {

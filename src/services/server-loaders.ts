@@ -13,6 +13,8 @@ import {
   getInstructions,
   getMemories,
   getProjects,
+  getProject,
+  getProjectPmo,
 } from "@/services/data";
 
 export const loadAppContext = cache(async () => {
@@ -82,6 +84,14 @@ export async function loadProjectsPage() {
   const { profile } = await loadAppContext();
   const projects = await getProjects(profile.id);
   return { profile, projects };
+}
+
+export async function loadProjectWorkspace(projectId: string) {
+  const { profile } = await loadAppContext();
+  const [project, pmo, documents, agents] = await Promise.all([
+    getProject(profile.id, projectId), getProjectPmo(profile.id, projectId), getDocuments(profile.id), getAgents(profile.id),
+  ]);
+  return { profile, project, ...pmo, documents: documents.filter((item) => item.project_id === projectId), agents };
 }
 
 export async function loadAgentsPage() {

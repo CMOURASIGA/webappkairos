@@ -25,6 +25,9 @@ export const projectSchema = z.object({
   cliente: z.string().optional().nullable(),
   descricao: z.string().optional().nullable(),
   status: z.string().default("ACTIVE"),
+  objetivo: z.string().optional().nullable(),
+  contexto: z.string().optional().nullable(),
+  prompt_base: z.string().optional().nullable(),
 });
 
 export const agentSchema = z.object({

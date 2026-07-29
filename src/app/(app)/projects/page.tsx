@@ -1,6 +1,7 @@
 import { PageIntro } from "@/components/common/page-intro";
 import { EntityManager } from "@/components/forms/entity-manager";
 import { loadProjectsPage } from "@/services/server-loaders";
+import Link from "next/link";
 
 export default async function ProjectsPage() {
   const { projects } = await loadProjectsPage();
@@ -44,16 +45,15 @@ export default async function ProjectsPage() {
       <div className="grid gap-3 md:grid-cols-2">
         {projects.map((project) => (
           <div key={project.id} className="rounded-2xl border border-cyan-300/20 bg-cyan-400/10 p-5">
-            <Link href={`/chat?project=${project.id}`} className="block transition hover:text-cyan-100">
+            <Link href={`/projects/${project.id}`} className="block transition hover:text-cyan-100">
             <p className="text-xs uppercase tracking-[0.2em] text-cyan-200">Notebook do projeto</p>
             <h3 className="mt-2 text-lg font-semibold text-white">{project.nome}</h3>
-            <p className="mt-2 text-sm text-slate-300">Abrir conversa e contexto exclusivo.</p>
+            <p className="mt-2 text-sm text-slate-300">Abrir controle, conhecimento e conversa exclusiva.</p>
             </Link>
-            <Link href={`/documents?project=${project.id}`} className="mt-4 inline-block text-sm font-medium text-cyan-200 hover:text-white">Enviar documentos do projeto</Link>
+            <Link href={`/projects/${project.id}?tab=knowledge`} className="mt-4 inline-block text-sm font-medium text-cyan-200 hover:text-white">Abrir workspace do projeto</Link>
           </div>
         ))}
       </div>
     </div>
   );
 }
-import Link from "next/link";

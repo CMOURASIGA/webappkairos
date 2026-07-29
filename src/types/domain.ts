@@ -96,6 +96,39 @@ export interface Project {
   updated_at: string;
 }
 
+export interface ProjectTask {
+  id: string;
+  project_id: string;
+  titulo: string;
+  descricao?: string | null;
+  status: "TODO" | "IN_PROGRESS" | "DONE";
+  prioridade: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  responsavel?: string | null;
+  prazo?: string | null;
+  created_at: string;
+}
+
+export interface ProjectDecision {
+  id: string;
+  project_id: string;
+  titulo: string;
+  descricao?: string | null;
+  status: "OPEN" | "DECIDED" | "REVIEW";
+  created_at: string;
+}
+
+export interface ProjectRisk {
+  id: string;
+  project_id: string;
+  titulo: string;
+  descricao?: string | null;
+  impacto: "LOW" | "MEDIUM" | "HIGH" | "CRITICAL";
+  probabilidade: "LOW" | "MEDIUM" | "HIGH";
+  mitigacao?: string | null;
+  status: "OPEN" | "MITIGATED" | "CLOSED";
+  created_at: string;
+}
+
 export interface AgentProfile {
   id: string;
   profile_id: string;

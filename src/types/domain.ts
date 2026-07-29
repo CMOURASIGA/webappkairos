@@ -78,6 +78,7 @@ export interface DocumentRecord {
   storage_path?: string | null;
   status: DocumentStatus;
   extraido_texto?: string | null;
+  processing_error?: string | null;
   project_id?: string | null;
   created_at: string;
 }

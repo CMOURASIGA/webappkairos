@@ -2,6 +2,9 @@
 -- Pode ser executada após a 004/005, inclusive se o ajuste manual 005a já foi aplicado.
 
 alter table public.tasks add column if not exists status text;
+alter table public.tasks add column if not exists updated_at timestamptz not null default now();
+alter table public.tasks add column if not exists position integer not null default 0;
+alter table public.tasks add column if not exists labels text[] not null default '{}';
 alter table public.tasks drop constraint if exists tasks_status_check;
 update public.tasks
 set status = case lower(coalesce(status, 'todo'))

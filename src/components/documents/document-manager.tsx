@@ -34,7 +34,7 @@ export function DocumentManager({
 
     setUploading(true);
     const formData = new FormData();
-    formData.append("file", files[0]);
+    Array.from(files).forEach((file) => formData.append("files", file));
     formData.append("categoria", category);
     if (projectId) formData.append("projectId", projectId);
 
@@ -50,7 +50,7 @@ export function DocumentManager({
       return;
     }
 
-    toast.success("Documento enviado e processado.");
+    toast.success(files.length === 1 ? "Documento enviado e processado." : `${files.length} documentos enviados e processados.`);
     router.refresh();
   };
 
@@ -110,11 +110,12 @@ export function DocumentManager({
           type="file"
           className="hidden"
           accept=".pdf,.docx,.txt,.csv,.xlsx"
+          multiple
           onChange={(event) => upload(event.target.files)}
         />
         <Button onClick={() => inputRef.current?.click()} disabled={uploading}>
           <UploadCloud className="h-4 w-4" />
-          {uploading ? "Processando..." : "Enviar documento"}
+          {uploading ? "Processando arquivos..." : "Selecionar arquivos"}
         </Button>
       </HologramCard>
 

@@ -11,9 +11,8 @@ function extensionFromName(name: string) {
   return extension;
 }
 
-export async function extractTextFromFile(file: File) {
-  const extension = extensionFromName(file.name);
-  const buffer = Buffer.from(await file.arrayBuffer());
+export async function extractTextFromBuffer(name: string, buffer: Buffer) {
+  const extension = extensionFromName(name);
 
   if (extension === "txt") {
     return buffer.toString("utf-8");
@@ -42,6 +41,10 @@ export async function extractTextFromFile(file: File) {
   }
 
   throw new Error(`Extensao nao suportada: ${extension}`);
+}
+
+export async function extractTextFromFile(file: File) {
+  return extractTextFromBuffer(file.name, Buffer.from(await file.arrayBuffer()));
 }
 
 export function createChunks(content: string) {
@@ -78,37 +81,30 @@ export async function uploadAndProcessDocument(
   projectId?: string,
 ) {
   const admin = getSupabaseAdminClient();
-  const content = await extractTextFromFile(file);
-  const chunks = createChunks(content);
   const timestamp = Date.now();
   const storagePath = `${profileId}/${timestamp}-${file.name}`;
 
-  const { error: uploadError } = await admin.storage
+  const { data: document, error: documentError } = await admin
+    .from("documents")
+    .insert({ profile_id: profileId, project_id: projectId ?? null, nome_arquivo: file.name, categoria: categoria ?? null, mime_type: file.type, tamanho: file.size, storage_path: storagePath, status: "PROCESSING" })
+    .select("*").single();
+  if (documentError) throw documentError;
+
+  try {
+    const content = await extractTextFromFile(file);
+    if (!content.trim()) throw new Error("Não foi possível extrair texto do arquivo. PDFs digitalizados precisam de OCR.");
+    const chunks = createChunks(content);
+
+    const { error: uploadError } = await admin.storage
     .from(env.SUPABASE_STORAGE_BUCKET)
     .upload(storagePath, Buffer.from(await file.arrayBuffer()), {
       contentType: file.type,
       upsert: true,
     });
 
-  const { data: document, error: documentError } = await admin
-    .from("documents")
-    .insert({
-      profile_id: profileId,
-      project_id: projectId ?? null,
-      nome_arquivo: file.name,
-      categoria: categoria ?? null,
-      mime_type: file.type,
-      tamanho: file.size,
-      storage_path: storagePath,
-      status: uploadError ? "ERROR" : "READY",
-      extraido_texto: content,
-    })
-    .select("*")
-    .single();
-
-  if (documentError) {
-    throw documentError;
-  }
+    if (uploadError) throw uploadError;
+    const { error: updateError } = await admin.from("documents").update({ status: "READY", extraido_texto: content, processing_error: null }).eq("id", document.id);
+    if (updateError) throw updateError;
 
   if (chunks.length > 0) {
     const rows = await Promise.all(
@@ -131,7 +127,12 @@ export async function uploadAndProcessDocument(
     }
   }
 
-  return document;
+    return { ...document, status: "READY", extraido_texto: content, processing_error: null };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Falha desconhecida no processamento.";
+    await admin.from("documents").update({ status: "ERROR", processing_error: message }).eq("id", document.id);
+    return { ...document, status: "ERROR", processing_error: message };
+  }
 }
 
 export async function reprocessDocument(profileId: string, documentId: string) {
@@ -147,7 +148,13 @@ export async function reprocessDocument(profileId: string, documentId: string) {
     throw error;
   }
 
-  const text = (document.extraido_texto as string | null) ?? "";
+  let text = (document.extraido_texto as string | null) ?? "";
+  if (document.storage_path) {
+    const { data: stored, error: downloadError } = await admin.storage.from(env.SUPABASE_STORAGE_BUCKET).download(document.storage_path as string);
+    if (downloadError) throw downloadError;
+    text = await extractTextFromBuffer(document.nome_arquivo as string, Buffer.from(await stored.arrayBuffer()));
+  }
+  if (!text.trim()) throw new Error("Não há texto extraível neste arquivo. PDFs digitalizados precisam de OCR.");
   const chunks = createChunks(text);
 
   await admin.from("document_chunks").delete().eq("document_id", documentId);
@@ -172,7 +179,7 @@ export async function reprocessDocument(profileId: string, documentId: string) {
 
   await admin
     .from("documents")
-    .update({ status: "READY" })
+    .update({ status: "READY", extraido_texto: text, processing_error: null })
     .eq("id", documentId)
     .eq("profile_id", profileId);
 }

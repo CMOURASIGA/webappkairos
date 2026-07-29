@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, useTransition } from "react";
-import { RefreshCcw, Trash2, UploadCloud } from "lucide-react";
+import { Eye, RefreshCcw, Trash2, UploadCloud, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -26,6 +26,7 @@ export function DocumentManager({
   const [isPending, startTransition] = useTransition();
   const [uploading, setUploading] = useState(false);
   const [category, setCategory] = useState(categories[0]?.value ?? "");
+  const [selectedDocument, setSelectedDocument] = useState<DocumentRecord | null>(null);
 
   const upload = async (files: FileList | null) => {
     if (!files || files.length === 0) {
@@ -50,7 +51,9 @@ export function DocumentManager({
       return;
     }
 
-    toast.success(files.length === 1 ? "Documento enviado e processado." : `${files.length} documentos enviados e processados.`);
+    const failed = (payload.documents ?? []).filter((document: DocumentRecord) => document.status === "ERROR");
+    if (failed.length) toast.error(`${failed.length} arquivo(s) não foram processados. Abra o item para ver o motivo.`);
+    else toast.success(files.length === 1 ? "Documento enviado e processado." : `${files.length} documentos enviados e processados.`);
     router.refresh();
   };
 
@@ -142,10 +145,11 @@ export function DocumentManager({
                     {formatDate(document.created_at)}
                   </p>
                   <p className="mt-3 text-xs leading-6 text-slate-400">
-                    {document.extraido_texto?.slice(0, 220) || "Sem resumo extraido."}
+                    {document.status === "ERROR" ? document.processing_error || "Falha no processamento." : document.extraido_texto?.slice(0, 220) || "Processamento ainda sem texto extraído."}
                   </p>
                 </div>
                 <div className="flex gap-2">
+                  <button type="button" aria-label="Ver transcrição" className="rounded-full border border-white/10 p-2 text-slate-300 transition hover:border-cyan-300/30 hover:text-white" onClick={() => setSelectedDocument(document)}><Eye className="h-4 w-4" /></button>
                   <button
                     type="button"
                     className="rounded-full border border-white/10 p-2 text-slate-300 transition hover:border-cyan-300/30 hover:text-white"
@@ -168,6 +172,7 @@ export function DocumentManager({
           ))}
         </div>
       </HologramCard>
+      {selectedDocument ? <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 p-4" role="dialog" aria-modal="true"><div className="flex max-h-[85vh] w-full max-w-4xl flex-col rounded-2xl border border-cyan-300/20 bg-slate-950 p-6 shadow-2xl"><div className="flex items-start justify-between gap-4"><div><p className="text-xs uppercase tracking-[.2em] text-cyan-200">Transcrição extraída</p><h3 className="mt-2 text-lg font-semibold text-white">{selectedDocument.nome_arquivo}</h3></div><button type="button" aria-label="Fechar transcrição" onClick={() => setSelectedDocument(null)} className="rounded-full border border-white/10 p-2 text-slate-300"><X className="h-4 w-4" /></button></div><pre className="glass-scroll mt-5 overflow-y-auto whitespace-pre-wrap rounded-xl border border-white/10 bg-white/4 p-4 text-sm leading-7 text-slate-200">{selectedDocument.extraido_texto || selectedDocument.processing_error || "Ainda não há transcrição disponível."}</pre></div></div> : null}
     </div>
   );
 }

@@ -5,7 +5,7 @@ import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const schema = z.object({
   type: z.enum(["task", "decision", "risk"]), action: z.enum(["create", "update", "delete"]).default("create"), id: z.string().uuid().optional(),
-  titulo: z.string().min(3), descricao: z.string().optional().nullable(),
+  titulo: z.string().min(3).optional(), descricao: z.string().optional().nullable(),
   status: z.string().optional(), prioridade: z.string().optional(), responsavel: z.string().optional().nullable(), prazo: z.string().optional().nullable(),
   impacto: z.string().optional(), probabilidade: z.string().optional(), mitigacao: z.string().optional().nullable(),
 });
@@ -32,6 +32,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ id
       if (error) throw error;
       return NextResponse.json({ data });
     }
+    if (!body.titulo) throw new Error("Informe o título para criar o registro.");
     const { data, error } = await admin.from(table).insert({ ...payload, profile_id: profile.id, project_id: projectId }).select("*").single();
     if (error) throw error;
     return NextResponse.json({ data });

@@ -107,9 +107,16 @@ export interface ProjectTask {
   responsavel?: string | null;
   prazo?: string | null;
   position?: number;
-  labels?: string[];
+  labels?: TaskLabel[];
   updated_at?: string;
   created_at: string;
+}
+
+export interface TaskLabel {
+  id: string;
+  task_id: string;
+  name: string;
+  color: string;
 }
 
 export interface ProjectDecision {

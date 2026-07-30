@@ -15,6 +15,7 @@ import {
   ProjectDecision,
   ProjectRisk,
   ProjectTask,
+  TaskLabel,
 } from "@/types/domain";
 
 type EntityTable = "instructions" | "memories" | "projects" | "agents";
@@ -51,16 +52,23 @@ async function selectByProfile<T>(
 }
 
 export async function getDashboardBundle(profile: Profile) {
-  const [conversations, memories, instructions, documents, projects, agents, executions] =
-    await Promise.all([
-      getConversations(profile.id),
-      getMemories(profile.id),
-      getInstructions(profile.id),
-      getDocuments(profile.id),
-      getProjects(profile.id),
-      getAgents(profile.id),
-      getAgentExecutions(profile.id),
-    ]);
+  const [
+    conversations,
+    memories,
+    instructions,
+    documents,
+    projects,
+    agents,
+    executions,
+  ] = await Promise.all([
+    getConversations(profile.id),
+    getMemories(profile.id),
+    getInstructions(profile.id),
+    getDocuments(profile.id),
+    getProjects(profile.id),
+    getAgents(profile.id),
+    getAgentExecutions(profile.id),
+  ]);
 
   return {
     conversations,
@@ -93,7 +101,10 @@ export async function getConversations(profileId: string, projectId?: string) {
   return (data ?? []) as Conversation[];
 }
 
-export async function getConversation(profileId: string, conversationId: string) {
+export async function getConversation(
+  profileId: string,
+  conversationId: string,
+) {
   const admin = getSupabaseAdminClient();
   const { data, error } = await admin
     .from("conversations")
@@ -142,21 +153,73 @@ export async function getProjects(profileId: string) {
 
 export async function getProject(profileId: string, projectId: string) {
   const admin = getSupabaseAdminClient();
-  const { data, error } = await admin.from("projects").select("*").eq("id", projectId).eq("profile_id", profileId).maybeSingle();
-  if (error) throw new Error(normalizeError(error) ?? "Erro ao carregar projeto");
+  const { data, error } = await admin
+    .from("projects")
+    .select("*")
+    .eq("id", projectId)
+    .eq("profile_id", profileId)
+    .maybeSingle();
+  if (error)
+    throw new Error(normalizeError(error) ?? "Erro ao carregar projeto");
   return (data as Project | null) ?? null;
 }
 
 export async function getProjectPmo(profileId: string, projectId: string) {
   const admin = getSupabaseAdminClient();
   const [tasks, decisions, risks] = await Promise.all([
-    admin.from("tasks").select("*").eq("profile_id", profileId).eq("project_id", projectId).order("created_at", { ascending: false }),
-    admin.from("decisions").select("*").eq("profile_id", profileId).eq("project_id", projectId).order("created_at", { ascending: false }),
-    admin.from("risks").select("*").eq("profile_id", profileId).eq("project_id", projectId).order("created_at", { ascending: false }),
+    admin
+      .from("tasks")
+      .select("*")
+      .eq("profile_id", profileId)
+      .eq("project_id", projectId)
+      .order("created_at", { ascending: false }),
+    admin
+      .from("decisions")
+      .select("*")
+      .eq("profile_id", profileId)
+      .eq("project_id", projectId)
+      .order("created_at", { ascending: false }),
+    admin
+      .from("risks")
+      .select("*")
+      .eq("profile_id", profileId)
+      .eq("project_id", projectId)
+      .order("created_at", { ascending: false }),
   ]);
   const error = tasks.error || decisions.error || risks.error;
-  if (error) throw new Error(normalizeError(error) ?? "Erro ao carregar controle do projeto");
-  return { tasks: (tasks.data ?? []) as ProjectTask[], decisions: (decisions.data ?? []) as ProjectDecision[], risks: (risks.data ?? []) as ProjectRisk[] };
+  if (error)
+    throw new Error(
+      normalizeError(error) ?? "Erro ao carregar controle do projeto",
+    );
+  const taskItems = (tasks.data ?? []) as ProjectTask[];
+  const taskIds = taskItems.map((task) => task.id);
+  const { data: labels, error: labelsError } = taskIds.length
+    ? await admin
+        .from("task_labels")
+        .select("id,task_id,name,color")
+        .in("task_id", taskIds)
+        .order("created_at")
+    : { data: [], error: null };
+  if (labelsError)
+    throw new Error(
+      normalizeError(labelsError) ??
+        "Erro ao carregar etiquetas das atividades",
+    );
+  const labelsByTask = new Map<string, TaskLabel[]>();
+  for (const label of (labels ?? []) as TaskLabel[]) {
+    labelsByTask.set(label.task_id, [
+      ...(labelsByTask.get(label.task_id) ?? []),
+      label,
+    ]);
+  }
+  return {
+    tasks: taskItems.map((task) => ({
+      ...task,
+      labels: labelsByTask.get(task.id) ?? [],
+    })),
+    decisions: (decisions.data ?? []) as ProjectDecision[],
+    risks: (risks.data ?? []) as ProjectRisk[],
+  };
 }
 
 export async function getAgents(profileId: string) {
@@ -205,7 +268,11 @@ export async function getAgentSettings(profileId: string) {
 }
 
 export async function getAgentExecutions(profileId: string) {
-  return selectByProfile<AgentExecution>("agent_executions", profileId, "created_at");
+  return selectByProfile<AgentExecution>(
+    "agent_executions",
+    profileId,
+    "created_at",
+  );
 }
 
 export async function createOrUpdateEntity(
@@ -218,7 +285,11 @@ export async function createOrUpdateEntity(
   const isUpdate = Boolean(payload.id);
 
   const query = isUpdate
-    ? admin.from(table).update(entity).eq("id", payload.id as string).eq("profile_id", profileId)
+    ? admin
+        .from(table)
+        .update(entity)
+        .eq("id", payload.id as string)
+        .eq("profile_id", profileId)
     : admin.from(table).insert(entity);
 
   const { data, error } = await query.select("*").single();
@@ -230,9 +301,17 @@ export async function createOrUpdateEntity(
   return data;
 }
 
-export async function deleteEntity(table: EntityTable, id: string, profileId: string) {
+export async function deleteEntity(
+  table: EntityTable,
+  id: string,
+  profileId: string,
+) {
   const admin = getSupabaseAdminClient();
-  const { error } = await admin.from(table).delete().eq("id", id).eq("profile_id", profileId);
+  const { error } = await admin
+    .from(table)
+    .delete()
+    .eq("id", id)
+    .eq("profile_id", profileId);
 
   if (error) {
     throw new Error(normalizeError(error) ?? "Erro desconhecido");
@@ -282,7 +361,10 @@ export async function updateConversation(
   return data as Conversation;
 }
 
-export async function deleteConversation(profileId: string, conversationId: string) {
+export async function deleteConversation(
+  profileId: string,
+  conversationId: string,
+) {
   const admin = getSupabaseAdminClient();
   const { error } = await admin
     .from("conversations")
